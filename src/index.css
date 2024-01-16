@@ -1,13 +1,105 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* @font-face {
+  font-display: swap;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('LatoLight'), url('./assets/fonts/Lato/LatoLight.woff2') format('woff2');
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+  font-display: swap;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('LatoRegular'), url('./assets/fonts/Lato/LatoRegular.woff2') format('woff2');
 }
+
+@font-face {
+  font-display: swap;
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('LatoBold'), url('./assets/fonts/Lato/LatoBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Syne';
+  font-style: normal;
+  font-weight: 600;
+  src: local('SyneSemiBold'), url('./assets/fonts/Syne/SyneSemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Syne';
+  font-style: normal;
+  font-weight: 700;
+  src: local('SyneBold'), url('./assets/fonts/Syne/SyneBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Syne';
+  font-style: normal;
+  font-weight: 800;
+  src: local('SyneExtraBold'), url('./assets/fonts/Syne/SyneExtraBold.woff2') format('woff2');
+} */
+
+:root {
+  /* Neutral colors */
+  --color-black: #000;
+  --color-white: #fff;
+  --color-gray: #ececec;
+  --color-gray-secondary: #1e1e1e;
+
+  --color-1--1: #d3eaff;
+  --color-2--2: #dd377d;
+  --color-3--3: #556b84;
+
+
+   /* Fonts */
+   --typo-1: 'Syne', Arial, Tahoma, sans-serif;
+   --typo-2: 'Lato', Arial, Tahoma, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+  
+body {
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--typo-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1.8rem;
+  overflow-x: hidden;
+}
+
+img {
+  font-family: "object-fit: cover; object-position: center;";
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+h3,
+h2,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  color: var(--color-gray-secondary);
+  font-size: 1.8rem;
+}
+
