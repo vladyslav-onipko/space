@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/space/static/css/main.e68c42dc.css",
+    "main.js": "/space/static/js/main.90646c9c.js",
+    "static/media/shuttle.jpg": "/space/static/media/shuttle.ecad895e3cf7aed7ed1a.jpg",
+    "static/media/404.avif": "/space/static/media/404.e818499d44f406d4fe63.avif",
+    "static/media/spacex.jpg": "/space/static/media/spacex.9b841f400c632fa26035.jpg",
+    "static/media/astronaut.jpg": "/space/static/media/astronaut.d2ac4f409e5d7402bc8d.jpg",
+    "static/media/logo.svg": "/space/static/media/logo.1f3ca6e8dc24b2adcf754b3311a8e33f.svg",
+    "static/media/heart.svg": "/space/static/media/heart.29fa0cd92e4bad0003303458ba457886.svg",
+    "static/media/bin.svg": "/space/static/media/bin.b99b593bb56d8861a767957da100ab04.svg",
+    "index.html": "/space/index.html",
+    "static/media/arrow-down.svg": "/space/static/media/arrow-down.e9ae105a1b367b017e6e5ecab7f3bf6c.svg",
+    "static/media/arow-left.svg": "/space/static/media/arow-left.ceaeda5c92a72b7e213510dc973f3716.svg",
+    "static/media/arrow-right.svg": "/space/static/media/arrow-right.812916a9860f773107da10da059fa608.svg",
+    "main.e68c42dc.css.map": "/space/static/css/main.e68c42dc.css.map",
+    "main.90646c9c.js.map": "/space/static/js/main.90646c9c.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e68c42dc.css",
+    "static/js/main.90646c9c.js"
+  ]
+}
