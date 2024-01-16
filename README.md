@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# You can view this project online
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+See [Project](https://vladyslav-onipko.github.io/space/).
 
 ## Available Scripts
 
