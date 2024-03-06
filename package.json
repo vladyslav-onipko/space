@@ -5,6 +5,7 @@
   "homepage": "https://vladyslav-onipko.github.io/space",
   "dependencies": {
     "@apollo/client": "3.8.9",
+    "@tanstack/react-query": "5.24.1",
     "@testing-library/jest-dom": "5.17.0",
     "@testing-library/react": "13.4.0",
     "@testing-library/user-event": "13.5.0",

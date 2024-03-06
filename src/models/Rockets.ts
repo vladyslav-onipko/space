@@ -1,5 +1,8 @@
+import { ReactNode } from "react";
+
 export interface Rocket {
     id: string;
+    fbId: string;
     img: {
         path: string,
         alt: string
@@ -16,10 +19,16 @@ export interface RocketItem {
     },
     name: string;
     description: string;
-    isFavorite?: boolean;
-    onAddFavorite?: (id: string) => void;
-    onDeleteFavite?: (id: string) => void;
+    action: ReactNode;
 };
+
+export interface RocketsSlider {
+    rockets: Rocket[];
+};
+
+export interface RocketsList {
+    rockets: Rocket[];
+}
 
 export enum LocalStorageKeys {
     FAVORITES = 'Favorites'

@@ -1,13 +1,19 @@
-import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
+import { useMutation } from '@tanstack/react-query';
+import { useSetRecoilState } from 'recoil';
 
-import favRocketsState from '../../store/atoms/FavRocketsState';
-import totalFavRockets from '../../store/selectors/TotalFavRockets';
-import { LocalStorageKeys } from '../../models/Rockets';
 import RocketItem from './RocketItem';
 import { Section } from '../../assets/css/section';
-import { HiddenText } from '../../assets/css/hiddenText';
 import Button from '../../ui/Button';
+
+import { RocketsList as RocketModelList} from '../../models/Rockets';
+import { LocalStorageKeys } from '../../models/Rockets';
+import { HiddenText } from '../../assets/css/hiddenText';
+import { removeFavoriteRocket, removeAllFavoriteRocket } from '../../utils/http';
+import favRocketsState from '../../store/atoms/FavRocketsState';
+
+import { ReactComponent as Bin } from '../../assets/img/bin.svg';
+import { secondaryButtonStyles } from '../../assets/css/buttons';
 
 const RocketContainer = styled.div`
     max-width: 1320px;
@@ -59,51 +65,67 @@ const ClearButton = styled(Button)`
     }
 `;
 
-const RocketsList: React.FC = () => {
-    const [rockets, setRockets] = useRecoilState(favRocketsState);
-    const hasRockets = useRecoilValue(totalFavRockets);
+const SecondaryActionButton = styled(Button)`
+    ${secondaryButtonStyles};
+`;
+
+const RocketsList: React.FC<RocketModelList> = ({ rockets }) => {
+    const setFavRockets = useSetRecoilState(favRocketsState);
+
+    const { mutate: mutateDelete } = useMutation({
+        mutationFn: removeFavoriteRocket,
+        onSuccess(_, rocketFbId) {
+            setFavRockets((prevRockets) => {
+                const updatedRockets = prevRockets.filter(r => r.fbId !== rocketFbId);
+                const rocketsId = updatedRockets.map(r => r.id);
+                localStorage.setItem(LocalStorageKeys.FAVORITES, JSON.stringify(rocketsId));
+                return updatedRockets;
+            });
+        },
+    });
+
+    const { mutate: mutateClear } = useMutation({
+        mutationFn: removeAllFavoriteRocket,
+        onSuccess() {
+            localStorage.removeItem(LocalStorageKeys.FAVORITES);
+            setFavRockets([]);
+        }
+    });
 
     const deleteFvoriteHndler = (id: string) => {
-        setRockets((prevRockets) => {
-            const updatedRockets = prevRockets.filter(r => r.id !== id);
-            localStorage.setItem(LocalStorageKeys.FAVORITES, JSON.stringify(updatedRockets));
-
-            return updatedRockets;
-        });
+        mutateDelete(id);
     };
 
     const clearFvoriteHandler = () => {
-        localStorage.removeItem(LocalStorageKeys.FAVORITES);
-        setRockets([]);
+        mutateClear();
     };
-
-    let content = <p>Your favorite Rockets will be here. Plese add one!</p>;
-
-    if (hasRockets) {
-        content = (
-            <RocketList>
-                {rockets.map(rocket => {
-                    return (
-                        <RocketListItem key={rocket.id}>
-                            <RocketItem
-                                name={rocket.name}
-                                description={rocket.description}
-                                img={rocket.img}
-                                onDeleteFavite={() => deleteFvoriteHndler(rocket.id)}
-                            />
-                        </RocketListItem>
-                    );
-                })}
-            </RocketList>
-        );
-    }
 
     return (
         <Section>
             <RocketContainer>
                 <RocketTitle>Favorites</RocketTitle>
-                {hasRockets && <ClearButton onClick={clearFvoriteHandler}>Clear all</ClearButton>}
-                {content}
+                <ClearButton onClick={clearFvoriteHandler}>Clear all</ClearButton>
+                <RocketList>
+                    {rockets.map(rocket => {
+                        return (
+                            <RocketListItem key={rocket.id}>
+                                <RocketItem
+                                    name={rocket.name}
+                                    description={rocket.description}
+                                    img={rocket.img}
+                                    action={
+                                        <SecondaryActionButton
+                                            onlyIcon={true}
+                                            icon={<Bin />}
+                                            hiddenText='Delete'
+                                            onClick={() => deleteFvoriteHndler(rocket.fbId)}
+                                        />
+                                    }
+                                />
+                            </RocketListItem>
+                        );
+                    })}
+                </RocketList>
             </RocketContainer>
         </Section>
     );

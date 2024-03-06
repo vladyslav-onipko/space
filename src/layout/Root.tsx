@@ -1,12 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { styled } from 'styled-components';
-import { useEffect } from 'react'; 
-import { useSetRecoilState } from 'recoil';
 
 import Header from './Header';
-
-import { LocalStorageKeys } from '../models/Rockets';
-import favRocketsState from '../store/atoms/FavRocketsState';
 
 const SiteWrapper = styled.div`
     height: 100%;
@@ -32,13 +27,6 @@ const SiteWrapperMain = styled.div`
 `;
 
 const Root: React.FC = () => {
-    const setFavRockets = useSetRecoilState(favRocketsState);
-
-    useEffect(() => {
-        const favorites = JSON.parse(localStorage.getItem(LocalStorageKeys.FAVORITES)!) || [];
-        setFavRockets(favorites);
-    }, [setFavRockets]);
-
     return (
         <SiteWrapper>
             <SiteWrapperHeader>

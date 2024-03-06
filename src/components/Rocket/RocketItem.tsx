@@ -3,11 +3,6 @@ import { styled } from 'styled-components';
 import { RocketItem as  RocketItemModel } from '../../models/Rockets';
 import Button from '../../ui/Button';
 
-import { secondaryButtonStyles } from '../../assets/css/buttons';
-
-import { ReactComponent as Heart } from '../../assets/img/heart.svg';
-import { ReactComponent as Bin } from '../../assets/img/bin.svg';
-
 const RocketContainer = styled.article`
     border: 1px solid var(--color-1--1);
     display: flex;
@@ -66,33 +61,8 @@ const ActionButton = styled(Button)`
     max-width: 280px;
 `;
 
-const SecondaryActionButton = styled(Button)`
-    ${secondaryButtonStyles};
-`;
 
 const RocketItem: React.FC<RocketItemModel> = (props) => {
-    let action = (
-        <SecondaryActionButton
-            onlyIcon={true}
-            icon={<Heart />}
-            hiddenText='Add to favorites'
-            disabled={props.isFavorite}
-            onClick={props.onAddFavorite}
-        />
-    );
-
-    if (props.onDeleteFavite) {
-        action = (
-            <SecondaryActionButton
-                onlyIcon={true}
-                icon={<Bin />}
-                hiddenText='Delete'
-                disabled={props.isFavorite}
-                onClick={props.onDeleteFavite}
-            />
-        );
-    }
-
     return (
         <RocketContainer>
             <RocketPicture>
@@ -105,7 +75,7 @@ const RocketItem: React.FC<RocketItemModel> = (props) => {
                 </RocketContent>
                 <RocketActions>
                     <ActionButton>Buy</ActionButton>
-                    {action}
+                    {props.action}
                 </RocketActions>
             </RocketWrapper>
         </RocketContainer>

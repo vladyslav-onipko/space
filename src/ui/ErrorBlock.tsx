@@ -4,7 +4,7 @@ import { ErrorBlock as Error } from "../models/ErrorBlock";
 
 const ErrorContainer = styled.div`
     border: 1px solid var(--color-2--2);
-    margin: 0 auto;
+    margin: 10px auto;
     padding: 10px;
     text-align: center;
     width: 50%;

@@ -1,28 +1,25 @@
 import { styled } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y, Navigation } from 'swiper/modules';
-import { useQuery } from '@apollo/client';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { useEffect } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { useMutation } from '@tanstack/react-query';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 
 import { Section } from "../../assets/css/section";
 import RocketItem from './RocketItem';
-import Spinner from '../../ui/Spinner';
-import ErrorBlock from '../../ui/ErrorBlock';
 import Button from '../../ui/Button';
 
-import { GET_ROCKETS } from '../../query/rockets';
-import rocketsState from '../../store/atoms/RocketsState';
 import favRocketsState from '../../store/atoms/FavRocketsState';
-import { LocalStorageKeys } from '../../models/Rockets';
-import totalRockets from '../../store/selectors/TotalRockets';
+import rocketsState from '../../store/atoms/RocketsState';
+import { addFavoriteRockets } from '../../utils/http';
+import { RocketsSlider as  RocketsSliderModel, LocalStorageKeys } from '../../models/Rockets';
 
-import { images } from '../../helpers/images';
 import { ReactComponent as ArrowRight } from '../../assets/img/arrow-right.svg';
 import { ReactComponent as ArrowLeft } from '../../assets/img/arow-left.svg';
+import { ReactComponent as Heart } from '../../assets/img/heart.svg';
+import { secondaryButtonStyles } from '../../assets/css/buttons';
 
 const RocketsContainer = styled.div`
     display: flex;
@@ -104,6 +101,10 @@ const RocketsSwiper = styled(Swiper)`
     }
 `;
 
+const SecondaryActionButton = styled(Button)`
+    ${secondaryButtonStyles};
+`;
+
 const RocketsSlide = styled(SwiperSlide)`
     height: auto;
     padding: 0 12px;
@@ -140,88 +141,73 @@ const NavButton = styled(Button)`
     }
 `;
 
-const RocketsSlider: React.FC = () => {
-    const { data, loading, error } = useQuery(GET_ROCKETS);
-    const [rockets, setRockets] = useRecoilState(rocketsState);
-    const [favRockets, setFavRockets] = useRecoilState(favRocketsState);
-    const hasRockets = useRecoilValue(totalRockets);
+const RocketsSlider: React.FC<RocketsSliderModel> = ({ rockets }) => {
+    const setFavRockets = useSetRecoilState(favRocketsState);
+    const setRockets = useSetRecoilState(rocketsState);
 
-    useEffect(() => {
-        if (data) {
-            const updatedRockets = data.rockets.map((rocket: {}, index: number) => {
-                const imageIndex = index >= images.length ? 0 : index;
-                return {...rocket, img: images[imageIndex]};
+    const { mutate } = useMutation({
+        mutationFn: addFavoriteRockets,
+        onSuccess(_, rocket) {
+            setFavRockets(prevRockets => {
+                const updatedRockets = [...prevRockets, rocket];
+                const rocketsId = updatedRockets.map(r => r.id);
+                localStorage.setItem(LocalStorageKeys.FAVORITES, JSON.stringify(rocketsId));
+
+                return updatedRockets;
             });
-    
-            setRockets(updatedRockets);
-        }
-    }, [data, setRockets]);
+
+            setRockets(prevRockets => prevRockets.map(r => r.id === rocket.id ? rocket : r));
+        },
+    });
 
     const addFavoriteHandler = (id: string) => {
-        const favRocket = rockets.find(r => r.id === id)!;
-
-        setFavRockets((prevRockets) => {
-            const updtedRockets = [...prevRockets, favRocket];
-            localStorage.setItem(LocalStorageKeys.FAVORITES, JSON.stringify(updtedRockets));
-
-            return updtedRockets;
-        });
+        const rocket = rockets.find(r => r.id === id)!;
+        const updatedRocket = {...rocket, isFavorite: true};
+        mutate(updatedRocket);
     };
-
-    let content = (
-        <>
-            <NavWrapper>
-                <NavButton className='review-swiper-button-prev' onlyIcon={true} icon={<ArrowLeft />}>Prev</NavButton>
-                <NavButton className='review-swiper-button-next' onlyIcon={true} icon={<ArrowRight />}>Next</NavButton>
-            </NavWrapper>
-            <RocketsSwiper
-                modules={[Navigation, Pagination, A11y]}
-                pagination={{ clickable: true }}
-                navigation={{
-                    nextEl: '.review-swiper-button-next',
-                    prevEl: '.review-swiper-button-prev',
-                }}
-                breakpoints={{
-                    640: {slidesPerView: 1},
-                    768: {slidesPerView: 2},
-                    1279: {slidesPerView: 3}
-                }}
-            >
-                {rockets.map(rocket => {
-                    const isFavorite = favRockets.find(r => r.id === rocket.id) ? true : false;
-                    return (
-                        <RocketsSlide key={rocket.id}>
-                            <RocketItem 
-                                img={rocket.img}
-                                name={rocket.name}
-                                description={rocket.description}
-                                isFavorite={isFavorite}
-                                onAddFavorite={() => addFavoriteHandler(rocket.id)}
-                            />
-                        </RocketsSlide>
-                    );
-                })}
-            </RocketsSwiper>
-        </>
-    );
-
-    if (loading) {
-        content = <Spinner />;
-    }
-
-    if (error) {
-        content = <ErrorBlock title='An error occurred' message={error.message}></ErrorBlock>
-    }
-
-    if (!loading && !hasRockets) {
-        content = <p>There are no Rockets now! Please, try later.</p>
-    }
 
     return (
         <Section>
             <RocketsContainer>
                 <RocketsTitlte>Popular tours</RocketsTitlte>
-                {content}
+                <NavWrapper>
+                    <NavButton className='review-swiper-button-prev' onlyIcon={true} icon={<ArrowLeft />}>Prev</NavButton>
+                    <NavButton className='review-swiper-button-next' onlyIcon={true} icon={<ArrowRight />}>Next</NavButton>
+                </NavWrapper>
+                <RocketsSwiper
+                    modules={[Navigation, Pagination, A11y]}
+                    pagination={{ clickable: true }}
+                    navigation={{
+                        nextEl: '.review-swiper-button-next',
+                        prevEl: '.review-swiper-button-prev',
+                    }}
+                    breakpoints={{
+                        640: {slidesPerView: 1},
+                        768: {slidesPerView: 2},
+                        1279: {slidesPerView: 3}
+                    }}
+                >
+                    {rockets.map(rocket => {
+                        return (
+                            <RocketsSlide key={rocket.id}>
+                                <RocketItem 
+                                    img={rocket.img}
+                                    name={rocket.name}
+                                    description={rocket.description}
+                                    action={
+                                        <SecondaryActionButton
+                                            onlyIcon={true}
+                                            icon={<Heart />}
+                                            hiddenText='Add to favorites'
+                                            disabled={rocket.isFavorite}
+                                            onClick={() => addFavoriteHandler(rocket.id)}
+                                        />
+                                    }
+                                />
+                            </RocketsSlide>
+                        );
+                    })}
+                </RocketsSwiper>
             </RocketsContainer>
         </Section>
     );
