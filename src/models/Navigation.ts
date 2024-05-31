@@ -1,8 +1,10 @@
-export interface LinkItem {
-    text: string;
-    href: string;
-};
+import { ComponentPropsWithoutRef } from 'react';
 
-export interface LinksList {
-    items: LinkItem[];
+export interface NavItem extends ComponentPropsWithoutRef<'li'> {
+  text: string;
+  href: string;
+}
+
+export interface NavListProps extends ComponentPropsWithoutRef<'ul'> {
+  items: NavItem[];
 }

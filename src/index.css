@@ -1,3 +1,44 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 62.5%;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-white);
+  color: var(--color-black);
+  font-family: var(--typo-1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1.8rem;
+  overflow-x: hidden;
+  position: relative;
+}
+
+img {
+  font-family: 'object-fit: cover; object-position: center;';
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+h3,
+h2,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  color: var(--color-4--4);
+  font-size: 1.8rem;
+}
+
 /* @font-face {
   font-display: swap;
   font-family: 'Lato';
@@ -47,59 +88,33 @@
 } */
 
 :root {
+  /* Site colors */
+  --color-1--1: #676f9d;
+  --color-1--2: #424769;
+  --color-1--3: #2d3250;
+  --color-2--1: #f9b17a;
+  --color-3--1: #dd377d;
+
+  /* Grey color */
+  --color-4--1: #f7f7f7;
+  --color-4--2: #efefef;
+  --color-4--3: #c5c5c5;
+  --color-4--4: #707070;
+  --color-4--5: #5a5a5a;
+
   /* Neutral colors */
   --color-black: #000;
   --color-white: #fff;
-  --color-gray: #ececec;
-  --color-gray-secondary: #1e1e1e;
 
-  --color-1--1: #d3eaff;
-  --color-2--2: #dd377d;
-  --color-3--3: #556b84;
+  /* Notification colors */
+  --color-green: #5ca465;
+  --color-green-light: #ecfcee;
+  --color-green-dark: #226e3a;
+  --color-red: #f95b5c;
+  --color-red-light: #fff5f5;
+  --color-red-dark: #c81c1e;
 
-
-   /* Fonts */
-   --typo-1: 'Syne', Arial, Tahoma, sans-serif;
-   --typo-2: 'Lato', Arial, Tahoma, sans-serif;
+  /* Fonts */
+  --typo-1: 'Syne', Arial, Tahoma, sans-serif;
+  --typo-2: 'Lato', Arial, Tahoma, sans-serif;
 }
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: 62.5%;
-  scroll-behavior: smooth;
-}
-  
-body {
-  background: var(--color-white);
-  color: var(--color-black);
-  font-family: var(--typo-1);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 1.8rem;
-  overflow-x: hidden;
-}
-
-img {
-  font-family: "object-fit: cover; object-position: center;";
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-h3,
-h2,
-p {
-  margin: 0;
-  padding: 0;
-}
-
-p {
-  color: var(--color-gray-secondary);
-  font-size: 1.8rem;
-}
-

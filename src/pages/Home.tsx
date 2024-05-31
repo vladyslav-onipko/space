@@ -1,62 +1,53 @@
 import { useQuery } from '@apollo/client';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-import HeroSlider from "../components/Hero/HeroSlider";
-import RocketsSlider from "../components/Rocket/RocketsSlider";
-import Spinner from '../ui/Spinner';
-import ErrorBlock from '../ui/ErrorBlock';
-import ContentWrapper from '../ui/ContentWrapper';
+import HeroSlider from '../components/Hero/HeroSlider';
+import RocketsSlider from '../components/Rocket/RocketsSlider';
+import Loader from '../components/UI/Helpers/Loader';
+import ErrorBlock from '../components/UI/Helpers/ErrorBlock';
+import Section from '../components/UI/Base/Section';
+import Container from '../components/UI/Base/Container';
+import Title from '../components/UI/Base/Title';
 
-import { GET_ROCKETS } from '../query/rockets';
-import { images } from '../helpers/images';
-import rocketsState from '../store/atoms/RocketsState';
-import totalRockets from '../store/selectors/TotalRockets';
-import { LocalStorageKeys, Rocket } from '../models/Rockets';
+import { GET_ROCKETS } from '../schemas/query/get-rockets';
+import { Rocket } from '../models/rockets';
+import { images } from '../utils/helpers/images';
 
 const Home: React.FC = () => {
-    const { data, loading, error } = useQuery(GET_ROCKETS);
-    const [rockets, setRockets] = useRecoilState(rocketsState);
-    const hasRockets = useRecoilValue(totalRockets);
+  const [rockets, setRockets] = useState([]);
+  const { data, loading, error } = useQuery(GET_ROCKETS);
 
-    useEffect(() => {
-        if (data) {
-            // get favorite rockets ids from LS to set isFavorite property correct
-            const favRocketsId = JSON.parse(localStorage.getItem(LocalStorageKeys.FAVORITES)!) || [];
-            const updatedRockets = data.rockets.map((rocket: Rocket, index: number) => {
-                const imageIndex = index >= images.length ? 0 : index;
-                // check if current rocket is favorite
-                const isFavorite = favRocketsId.includes(rocket.id) ? true : false;
-                return {...rocket, img: images[imageIndex], isFavorite};
-            });
-            setRockets(updatedRockets);
-        }
-    }, [data, setRockets]);
-
-    let content = <RocketsSlider rockets={rockets}/>;
-
-    if (loading) {
-        content = <ContentWrapper><Spinner /></ContentWrapper>;
+  useEffect(() => {
+    if (data) {
+      const updatedRockets = data.rockets.map((rocket: Rocket & { name: string; id: string }, index: number) => {
+        const imageIndex = index >= images.length ? 0 : index;
+        return { ...rocket, _id: rocket.id, image: images[imageIndex].path, title: rocket.name };
+      });
+      setRockets(updatedRockets);
     }
+  }, [data, setRockets]);
 
-    if (error) {
-        content = (
-            <ContentWrapper>
-                <ErrorBlock title='An error occurred' message={error.message}></ErrorBlock>
-            </ContentWrapper>
-        );
-    }
+  let rocketsContent = <RocketsSlider title="Popular tours" rockets={rockets} />;
 
-    if (!loading && !hasRockets && !error) {
-        content = <ContentWrapper><p>There are no Rockets now! Please, try later.</p></ContentWrapper>;
-    }
+  if (loading) {
+    rocketsContent = <Loader />;
+  }
 
-    return (
-        <>
-            <HeroSlider />
-            {content}
-        </>
-    );
+  if (error) {
+    rocketsContent = <ErrorBlock message={error.message}></ErrorBlock>;
+  }
+
+  return (
+    <>
+      <HeroSlider />
+      <Section>
+        <Container>
+          <Title tag="h2">Space X offers you</Title>
+          {rocketsContent}
+        </Container>
+      </Section>
+    </>
+  );
 };
 
 export default Home;

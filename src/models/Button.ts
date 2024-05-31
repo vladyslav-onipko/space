@@ -1,13 +1,18 @@
-import { ReactNode } from "react";
+import { ComponentPropsWithoutRef } from 'react';
 
-export interface Button {
-    icon?: ReactNode;
-    onlyIcon?: boolean;
-    className?: string;
-    link?: boolean;
-    navLink?: boolean;
-    href?: string;
-    hiddenText?: string;
-    disabled?: boolean;
-    onClick?: any;
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { LinkModeConfig } from './link';
+
+export type ButtonModeConfig = 'default' | 'secondary' | 'primary';
+
+export interface ButtonStylesConfig {
+  $mode?: ButtonModeConfig | LinkModeConfig;
+  $onlyIcon?: boolean;
+}
+
+export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
+  mode?: ButtonModeConfig;
+  icon?: IconProp;
+  onlyIcon?: boolean;
+  text: string;
 }

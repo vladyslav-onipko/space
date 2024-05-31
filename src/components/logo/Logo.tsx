@@ -1,44 +1,47 @@
 import { Link } from 'react-router-dom';
+
 import { styled } from 'styled-components';
 
 import { ReactComponent as logo } from '../../assets/img/logo.svg';
-import Routs from '../../models/Routs';
+import { baseRouts } from '../../router/routs';
 
 const LogoLink = styled(Link)`
-    display: block;
-    height: 42px;
-    width: 230px;
+  display: block;
+  height: 42px;
+  width: 230px;
 
-    @media (max-width: 767px) {
-        height: 33px;
-        width: 180px;
-    }
+  @media (max-width: 767px) {
+    height: 33px;
+    width: 180px;
+  }
 `;
 
 const LogoHeader = styled.h1`
-    display: inline-block;
+  display: inline-block;
 `;
 
 const LogoImage = styled.span`
-    align-items: center;
-    display: flex;
+  align-items: center;
+  display: flex;
 `;
 
 const LogoSvg = styled(logo)`
-    @media (max-width: 767px) {
-        height: auto;
-        width: 100%;
-    }
+  @media (max-width: 767px) {
+    height: auto;
+    width: 100%;
+  }
 `;
 
 const Logo: React.FC = () => {
-    return <LogoLink to={Routs.HOME}>
-        <LogoHeader>
-            <LogoImage aria-hidden="true">
-                <LogoSvg />
-            </LogoImage>
-        </LogoHeader>
+  return (
+    <LogoLink to={baseRouts.HOME}>
+      <LogoHeader>
+        <LogoImage aria-hidden="true">
+          <LogoSvg />
+        </LogoImage>
+      </LogoHeader>
     </LogoLink>
+  );
 };
 
 export default Logo;

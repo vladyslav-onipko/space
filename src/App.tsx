@@ -1,15 +1,22 @@
+import { useEffect, useRef } from 'react';
 import { RouterProvider } from 'react-router-dom';
-import router from './router/router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const queryClient = new QueryClient();
+import useAppDispatch from './hooks/app-dispatch';
+import { autoLogin } from './store/user/auth/auth-actions';
+import router from './router/router';
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
+  const initialized = useRef(true);
+  const dispatch = useAppDispatch();
+
+  if (initialized.current) {
+    dispatch(autoLogin());
+  }
+
+  useEffect(() => {
+    initialized.current = false;
+  }, []);
+  return <RouterProvider router={router} />;
 }
 
 export default App;

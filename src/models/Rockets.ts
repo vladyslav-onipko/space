@@ -1,35 +1,40 @@
-import { ReactNode } from "react";
+import { ComponentPropsWithoutRef } from 'react';
 
 export interface Rocket {
-    id: string;
-    fbId: string;
-    img: {
-        path: string,
-        alt: string
-    },
-    name: string;
-    description: string;
-    isFavorite: boolean;
-};
-
-export interface RocketItem {
-    img: {
-        path: string,
-        alt: string
-    },
-    name: string;
-    description: string;
-    action: ReactNode;
-};
-
-export interface RocketsSlider {
-    rockets: Rocket[];
-};
-
-export interface RocketsList {
-    rockets: Rocket[];
+  id: string;
+  image: string;
+  title: string;
+  description: string;
+  likes: string[];
+  shared: boolean;
+  date: string;
+  creator: string;
+  rating: number;
 }
 
-export enum LocalStorageKeys {
-    FAVORITES = 'Favorites'
-};
+export interface RocketItemProps extends ComponentPropsWithoutRef<'article'> {
+  rocket: Rocket;
+}
+
+export interface RocketsSliderProps extends ComponentPropsWithoutRef<'div'> {
+  rockets: Rocket[];
+  slidesPerView?: {
+    desktop: number;
+    tablet: number;
+    mobile: number;
+  };
+}
+
+export interface RocketsListProps extends ComponentPropsWithoutRef<'ul'> {
+  rockets: Rocket[];
+}
+
+export interface RocketEditInputValues {
+  image: File | string;
+  title: string;
+  description: string;
+}
+
+export interface RocketCreateInputValues extends RocketEditInputValues {
+  shared: boolean;
+}

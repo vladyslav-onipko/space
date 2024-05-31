@@ -1,7 +1,3 @@
-# You can view this project online
-
-See [Project](https://vladyslav-onipko.github.io/space/).
-
 ## Available Scripts
 
 In the project directory, you can run:
