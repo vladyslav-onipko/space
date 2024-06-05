@@ -18,7 +18,7 @@ import shuttleImage from '../../assets/img/shuttle.jpg';
 import { SigninSchema } from '../../schemas/form-validation/user';
 import { SigninInputValues } from '../../models/user';
 import { auth } from '../../store/user/auth/auth-actions';
-import { ExtendedError } from '../../models/http-error';
+import { ServerError } from '../../models/http-error';
 import { showNotification } from '../../store/notification/notification-slice';
 
 const RegisterLink = styled(Link)`
@@ -52,7 +52,7 @@ const Login: React.FC = () => {
       dispatch(showNotification({ message: e.message, status: 'error' }));
 
       if (e.errors && e.errors.length) {
-        e.errors.forEach((error: ExtendedError) => actions.setFieldError(error.field, error.message));
+        e.errors.forEach((error: ServerError) => actions.setFieldError(error.field, error.message));
       }
     }
   };

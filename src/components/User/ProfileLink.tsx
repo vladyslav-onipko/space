@@ -16,8 +16,10 @@ const ProfileImageWrap = styled.span`
 
 const ProfileLink: React.FC = () => {
   const { name, image, id } = useAppSelector((state) => state.auth.user);
+  const profileRoute = userRouts.PROFILE.replace(':id', id);
+
   return (
-    <Link type="nav-link" to={`${userRouts.PROFILE}/${id}`} onlyIcon text={name} mode="secondary">
+    <Link type="nav-link" to={profileRoute} onlyIcon text={name} mode="secondary">
       <ProfileImageWrap>
         <img src={`${process.env.REACT_APP_BACKEND_URL}/${image}`} alt={name} />
       </ProfileImageWrap>

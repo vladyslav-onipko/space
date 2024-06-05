@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Formik, FormikHelpers, FormikProps } from 'formik';
@@ -14,15 +14,14 @@ import useAppDispatch from '../../hooks/app-dispatch';
 
 import { ProfileEditSchema } from '../../schemas/form-validation/user';
 import { ProfileEditInputValues } from '../../models/user';
-import { userRouts } from '../../router/routs';
 import { updateProfile } from '../../store/user/profile/profile-actions';
 import { showNotification } from '../../store/notification/notification-slice';
-import { ExtendedError } from '../../models/http-error';
+import { ServerError } from '../../models/http-error';
 
 const ProfileEditModal: React.FC = () => {
   const { user, token } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const navigate = useNavigate();
 
   const initialInputValues: ProfileEditInputValues = {
@@ -30,31 +29,20 @@ const ProfileEditModal: React.FC = () => {
     name: user.name,
   };
 
-  useEffect(() => {
-    setShowModal(true);
-  }, []);
-
   const handleShowModal = () => {
-    setShowModal((show) => {
-      if (!show) {
-        navigate(userRouts.EDIT_PROFILE);
-      } else {
-        setTimeout(() => navigate(-1), 200);
-      }
-
-      return !show;
-    });
+    setShowModal(false);
+    setTimeout(() => navigate(-1), 200);
   };
 
   const handleSubmit = async (values: ProfileEditInputValues, actions: FormikHelpers<ProfileEditInputValues>) => {
     try {
       const data = await dispatch(updateProfile(values, user.id, token));
-      navigate(-1);
       dispatch(showNotification({ message: data.message, status: 'success' }));
+      navigate(-1);
     } catch (e: any) {
       dispatch(showNotification({ message: e.message, status: 'error' }));
       if (e.errors && e.errors.length) {
-        e.errors.forEach((error: ExtendedError) => actions.setFieldError(error.field, error.message));
+        e.errors.forEach((error: ServerError) => actions.setFieldError(error.field, error.message));
       }
     }
   };

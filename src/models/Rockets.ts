@@ -2,12 +2,13 @@ import { ComponentPropsWithoutRef } from 'react';
 
 export interface Rocket {
   id: string;
+  location: google.maps.LatLngLiteral;
   image: string;
   title: string;
   description: string;
   likes: string[];
   shared: boolean;
-  date: string;
+  createdAt: string;
   creator: string;
   rating: number;
 }
@@ -36,5 +37,6 @@ export interface RocketEditInputValues {
 }
 
 export interface RocketCreateInputValues extends RocketEditInputValues {
+  address: string;
   shared: boolean;
 }

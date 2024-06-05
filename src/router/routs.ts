@@ -3,10 +3,15 @@ export const baseRouts = {
 };
 
 export const userRouts = {
-  SIGNIN: '/space/signin',
-  SIGNUP: '/space/signup',
-  PROFILE: '/space/user',
+  SIGNIN: `${baseRouts.HOME}/signin`,
+  SIGNUP: `${baseRouts.HOME}/signup`,
+  PROFILE: `${baseRouts.HOME}/user/:id`,
   EDIT_PROFILE: 'edit',
   ADD_ROCKET: 'rocket/create',
-  EDIT_ROCKET: 'rocket/:id/edit',
+};
+
+export const rocketRouts = {
+  ALL_ROCKETS: 'rockets',
+  DETAIL_ROCKET: `${baseRouts.HOME}/rocket/:id`,
+  EDIT_ROCKET: 'edit',
 };

@@ -1,14 +1,10 @@
-import { useNavigate } from 'react-router-dom';
-
 import { styled } from 'styled-components';
 
-import { RocketItemProps } from '../../models/rockets';
-
 import Button from '../UI/Base/Button';
-import DropdownButton from '../UI/Base/DropdownButton';
+import Link from '../UI/Base/Link';
 
-import useAppSelector from '../../hooks/app-selector';
-import { userRouts } from '../../router/routs';
+import { RocketItemProps } from '../../models/rockets';
+import { rocketRouts } from '../../router/routs';
 
 const RocketContainer = styled.article`
   border: 1px solid var(--color-1--2);
@@ -64,17 +60,13 @@ const RocketActions = styled.div`
   margin-top: auto;
 `;
 
-const DetailButton = styled(Button)`
+const DetailButton = styled(Link)`
   flex-grow: 1;
   max-width: 280px;
 `;
 
 const RocketItem: React.FC<RocketItemProps> = ({ rocket }) => {
-  const { id } = useAppSelector((state) => state.auth.user);
-  const navigate = useNavigate();
-
-  const rocketEditRoute = userRouts.EDIT_ROCKET.replace(':id', rocket.id);
-  const showMoreActions = id === rocket.creator;
+  const detailRocketRout = rocketRouts.DETAIL_ROCKET.replace(':id', rocket.id);
 
   return (
     <RocketContainer>
@@ -87,22 +79,7 @@ const RocketItem: React.FC<RocketItemProps> = ({ rocket }) => {
           <RocketTeaser>{rocket.description}</RocketTeaser>
         </RocketContent>
         <RocketActions>
-          <DetailButton text="Detail" mode="secondary" />
-          {showMoreActions && (
-            <DropdownButton text="more rocket actions" icon={['fas', 'ellipsis-vertical']} onlyIcon>
-              <ul>
-                <li>
-                  <Button text="edit" icon={['far', 'pen-to-square']} onClick={() => navigate(rocketEditRoute)} />
-                </li>
-                <li>
-                  <Button text={rocket.shared ? 'unshare' : 'share'} icon={['far', 'share-square']} />
-                </li>
-                <li>
-                  <Button text="delete" icon={['far', 'trash-can']} />
-                </li>
-              </ul>
-            </DropdownButton>
-          )}
+          <DetailButton text="Detail" mode="secondary" type="router-link" to={detailRocketRout} />
           <Button text="like" icon={['far', 'heart']} onlyIcon />
         </RocketActions>
       </RocketContentWrapper>

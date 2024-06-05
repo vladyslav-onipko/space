@@ -10,10 +10,11 @@ import ProtectedRoute from '../components/UI/Helpers/ProtectedRoute';
 import ProfileEditModal from '../components/User/ProfileEditModal';
 import RocketCreateModal from '../components/Rocket/RocketCreateModal';
 import RocketEditModal from '../components/Rocket/RocketEditModal';
+import RocketDetail from '../pages/Rockets/RocketDetail';
 
 import { UrlParamsContextProvider } from '../store/http/url-params-context';
 
-import { baseRouts, userRouts } from './routs';
+import { baseRouts, userRouts, rocketRouts } from './routs';
 
 const router = createBrowserRouter([
   {
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
         element: <ProtectedRoute needAuth />,
         children: [
           {
-            path: `${userRouts.PROFILE}/:id`,
+            path: `${userRouts.PROFILE}`,
             element: (
               <UrlParamsContextProvider>
                 <Profile />
@@ -42,8 +43,12 @@ const router = createBrowserRouter([
             children: [
               { path: userRouts.EDIT_PROFILE, element: <ProfileEditModal /> },
               { path: userRouts.ADD_ROCKET, element: <RocketCreateModal /> },
-              { path: `${userRouts.EDIT_ROCKET}`, element: <RocketEditModal /> },
             ],
+          },
+          {
+            path: rocketRouts.DETAIL_ROCKET,
+            element: <RocketDetail />,
+            children: [{ path: rocketRouts.EDIT_ROCKET, element: <RocketEditModal /> }],
           },
         ],
       },

@@ -1,8 +1,8 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Formik, FormikProps } from 'formik';
-import { useMutation } from '@tanstack/react-query';
+import { Formik, FormikHelpers, FormikProps } from 'formik';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import isequal from 'lodash.isequal';
 
 import Modal from '../UI/Base/Modal';
@@ -16,19 +16,19 @@ import useAppDispatch from '../../hooks/app-dispatch';
 import useAppSelector from '../../hooks/app-selector';
 
 import { RocketCreateInputValues } from '../../models/rockets';
-import { RocketSchema } from '../../schemas/form-validation/user';
-import { userRouts } from '../../router/routs';
+import { RocketCreateSchema } from '../../schemas/form-validation/rockets';
 import { showNotification } from '../../store/notification/notification-slice';
-import { createRocket } from '../../utils/http/user';
+import { createRocket } from '../../utils/http/rockets';
 import { UrlParamsContext } from '../../store/http/url-params-context';
-import { queryClient } from '../..';
+import { ServerError, ResponseError } from '../../models/http-error';
 
 const RocketCreateModal: React.FC = () => {
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(true);
   const { token, user } = useAppSelector((state) => state.auth);
   const { urlParams, setUrlParams } = useContext(UrlParamsContext);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
     mutationFn: createRocket,
@@ -41,11 +41,15 @@ const RocketCreateModal: React.FC = () => {
         setUrlParams(newUrlParams);
       }
 
-      navigate(-1);
       dispatch(showNotification({ message: data.message, status: 'success' }));
+      navigate(-1);
     },
-    onError(error) {
+    onError(error: ResponseError, data) {
       dispatch(showNotification({ message: error.message, status: 'error' }));
+
+      if (error.errors && error.errors.length) {
+        error.errors.forEach((error: ServerError) => data.setFieldError!(error.field, error.message));
+      }
     },
   });
 
@@ -53,31 +57,22 @@ const RocketCreateModal: React.FC = () => {
     image: '',
     title: '',
     description: '',
+    address: '',
     shared: false,
   };
 
   const handleShowModal = () => {
-    setShowModal((show) => {
-      if (!show) {
-        navigate(userRouts.ADD_ROCKET);
-      } else {
-        setTimeout(() => navigate(-1), 200);
-      }
-      return !show;
-    });
+    setShowModal(false);
+    setTimeout(() => navigate(-1), 200);
   };
 
-  useEffect(() => {
-    setShowModal(true);
-  }, []);
-
-  const handleSubmit = async (values: RocketCreateInputValues) => {
-    mutate({ rocketData: values, userId: user.id, token: token! });
+  const handleSubmit = async (values: RocketCreateInputValues, actions: FormikHelpers<RocketCreateInputValues>) => {
+    mutate({ rocketData: values, userId: user.id, token: token!, setFieldError: actions.setFieldError });
   };
 
   return (
     <Modal title="Create new rocket" showModal={showModal} onShowModal={handleShowModal}>
-      <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={RocketSchema}>
+      <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={RocketCreateSchema}>
         {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<RocketCreateInputValues>) => (
           <Form
             actions={
@@ -108,6 +103,14 @@ const RocketCreateModal: React.FC = () => {
               inputType="textarea"
               cols={5}
               rows={5}
+              required
+            />
+            <Input
+              type="text"
+              label="Address"
+              placeholder="enter rocket address"
+              id="address"
+              name="address"
               required
             />
             <Checkbox label="Share rocket with people" name="shared" id="shared" />

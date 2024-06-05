@@ -53,7 +53,20 @@ const ImagePicker: React.FC<ImagePickerProps> = ({
   const [error, setError] = useState('');
 
   const inputRef = useRef<HTMLInputElement>(null);
-  console.log(imagePath);
+  const handlePickImage = () => {
+    inputRef.current!.click();
+  };
+
+  const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
+    if (currentTarget.files && currentTarget.files.length === 1) {
+      const file = currentTarget.files[0];
+
+      setFile(file);
+      onSetFieldTouched(name, true);
+      onSetFieldValue(name, file);
+    }
+  };
+
   useEffect(() => {
     const fileReader = new FileReader();
 
@@ -85,20 +98,6 @@ const ImagePicker: React.FC<ImagePickerProps> = ({
     };
     createPreview();
   }, [file, name, imagePath, onSetFieldValue]);
-
-  const handlePickImage = () => {
-    inputRef.current!.click();
-  };
-
-  const handleChange = ({ currentTarget }: ChangeEvent<HTMLInputElement>) => {
-    if (currentTarget.files && currentTarget.files.length === 1) {
-      const file = currentTarget.files[0];
-
-      setFile(file);
-      onSetFieldTouched(name, true);
-      onSetFieldValue(name, file);
-    }
-  };
 
   const previewEl = previewUrl ? <img src={previewUrl} alt={file?.name || 'Preview'} /> : <span>{error}</span>;
 

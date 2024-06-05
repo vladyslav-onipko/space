@@ -70,7 +70,7 @@ const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 

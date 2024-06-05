@@ -47,14 +47,3 @@ export const ProfileEditSchema = object().shape({
     .test('fileFormat', 'Only .jpg, .png, .jpeg are allowed', fileFormatValidation)
     .test('fileSize', 'File size must be less than 5MB', fileSizeValidation),
 });
-
-export const RocketSchema = object().shape({
-  title: string().min(3, 'Title must be at least 3 characters long').required('Field must not be empty'),
-  image: mixed()
-    .test('fileFormat', 'Only .jpg, .png, .jpeg are allowed', fileFormatValidation)
-    .test('fileSize', 'File size must be less than 5MB', fileSizeValidation),
-  description: string()
-    .min(10, 'Description must be at least 10 characters long')
-    .max(200, 'Description must be less than 200 characters long')
-    .required('Field must not be empty'),
-});

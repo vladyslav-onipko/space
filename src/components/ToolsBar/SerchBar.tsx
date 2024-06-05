@@ -6,10 +6,7 @@ import debounce from 'lodash.debounce';
 
 import hiddenTextStyles from '../../assets/css/helpers/hiddenText';
 
-import useAppDispatch from '../../hooks/app-dispatch';
-
 import { UrlParamsContext } from '../../store/http/url-params-context';
-import { setRockets } from '../../store/rockets/rockets-slice';
 
 const SearchInputControl = styled.div`
   display: flex;
@@ -66,16 +63,14 @@ const DEBOUNCE_DELAY = 500;
 
 const SearchBar: React.FC = () => {
   const { setUrlParams } = useContext(UrlParamsContext);
-  const dispatch = useAppDispatch();
 
   const debounceSearch = useCallback(
     (value: string) => {
       debounce(() => {
-        dispatch(setRockets({ rockets: [], clearOld: true }));
         setUrlParams({ search: value, page: 1 });
       }, DEBOUNCE_DELAY)();
     },
-    [setUrlParams, dispatch]
+    [setUrlParams]
   );
 
   const handleInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {

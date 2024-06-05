@@ -15,11 +15,11 @@ const DropdownContainer = styled.div`
 
 const DropdownBlock = styled.div`
   background-color: var(--color-2--1);
-  bottom: 100%;
+  top: 100%;
   border-radius: 5px;
   color: var(--color-1--3);
   font-size: 1.4rem;
-  margin-bottom: 10px;
+  margin-top: 10px;
   min-width: 100%;
   padding: 10px 20px;
   position: absolute;
@@ -70,15 +70,22 @@ const DropdownBlock = styled.div`
 
   &::before {
     content: '';
+    height: 0;
     position: absolute;
-    top: 100%;
+    bottom: 100%;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 10px solid var(--color-2--1);
+    border-bottom: 10px solid var(--color-2--1);
     left: 50%;
     transform: translateX(-50%);
+    width: 0;
     z-index: 1;
   }
+`;
+
+const DropdownToggle = styled(Button)`
+  border-radius: 50%;
+  min-width: 50px;
 `;
 
 const DropdownButton: React.FC<ButtonProps> = ({ children, ...props }) => {
@@ -114,7 +121,7 @@ const DropdownButton: React.FC<ButtonProps> = ({ children, ...props }) => {
 
   return (
     <DropdownContainer>
-      <Button aria-expanded={showDropdown} {...props} onClick={handleToggleDropDown} />
+      <DropdownToggle aria-expanded={showDropdown} {...props} onClick={handleToggleDropDown} />
       <CSSTransition nodeRef={dropdownRef} in={showDropdown} timeout={200} classNames="fade" mountOnEnter unmountOnExit>
         <DropdownBlock ref={dropdownRef}>{children}</DropdownBlock>
       </CSSTransition>
