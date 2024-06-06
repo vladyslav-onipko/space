@@ -99,7 +99,6 @@ const RocketDetail: React.FC = () => {
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey });
       dispatch(showNotification({ message: data.message, status: 'success' }));
-      navigate(profileRoute, { replace: true });
     },
     onError(error) {
       dispatch(showNotification({ message: error.message, status: 'error' }));
@@ -111,6 +110,7 @@ const RocketDetail: React.FC = () => {
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey });
       dispatch(showNotification({ message: data.message, status: 'success' }));
+      navigate(profileRoute, { replace: true });
     },
     onError(error) {
       dispatch(showNotification({ message: error.message, status: 'error' }));
