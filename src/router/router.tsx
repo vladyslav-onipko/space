@@ -8,13 +8,13 @@ import Registration from '../pages/User/Registration';
 import Profile from '../pages/User/Profile';
 import ProtectedRoute from '../components/UI/Helpers/ProtectedRoute';
 import ProfileEditModal from '../components/User/ProfileEditModal';
-import RocketCreateModal from '../components/Rocket/RocketCreateModal';
-import RocketEditModal from '../components/Rocket/RocketEditModal';
-import RocketDetail from '../pages/Rockets/RocketDetail';
+import PlaceCreateModal from '../components/Place/PlaceCreateModal';
+import PlaceEditModal from '../components/Place/PlaceEditModal';
+import PlaceDetail from '../pages/Place/PlaceDetail';
 
 import { UrlParamsContextProvider } from '../store/http/url-params-context';
 
-import { baseRouts, userRouts, rocketRouts } from './routs';
+import { baseRouts, userRouts, placeRouts } from './routs';
 
 const router = createBrowserRouter([
   {
@@ -42,13 +42,13 @@ const router = createBrowserRouter([
             ),
             children: [
               { path: userRouts.EDIT_PROFILE, element: <ProfileEditModal /> },
-              { path: userRouts.ADD_ROCKET, element: <RocketCreateModal /> },
+              { path: userRouts.ADD_PLACE, element: <PlaceCreateModal /> },
             ],
           },
           {
-            path: rocketRouts.DETAIL_ROCKET,
-            element: <RocketDetail />,
-            children: [{ path: rocketRouts.EDIT_ROCKET, element: <RocketEditModal /> }],
+            path: placeRouts.DETAIL_PLACE,
+            element: <PlaceDetail />,
+            children: [{ path: placeRouts.EDIT_PLACE, element: <PlaceEditModal /> }],
           },
         ],
       },

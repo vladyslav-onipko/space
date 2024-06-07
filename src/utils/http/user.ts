@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import HttpError from '../../models/http-error';
+import { ResponseGetUserProfileData } from '../../models/user';
 
 interface getUserProfileConfig {
   userId: string;
@@ -9,7 +10,12 @@ interface getUserProfileConfig {
   signal: any;
 }
 
-export const getUserProfile = async ({ userId, token, urlParams, signal }: getUserProfileConfig) => {
+export const getUserProfile = async ({
+  userId,
+  token,
+  urlParams,
+  signal,
+}: getUserProfileConfig): Promise<ResponseGetUserProfileData | undefined> => {
   const url = `${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}`;
 
   try {

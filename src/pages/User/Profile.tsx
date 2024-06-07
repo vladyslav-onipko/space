@@ -13,8 +13,8 @@ import ToolsBar from '../../components/ToolsBar/ToolsBar';
 import Loader from '../../components/UI/Helpers/Loader';
 import Section from '../../components/UI/Base/Section';
 import ErrorBlock from '../../components/UI/Helpers/ErrorBlock';
-import RocketsStatusBar from '../../components/Rocket/RocketsStatusBar';
-import RocketsList from '../../components/Rocket/RocketsList';
+import PlacesStatusBar from '../../components/Place/PlacesStatusBar';
+import PlacesList from '../../components/Place/PlacesList';
 import Title from '../../components/UI/Base/Title';
 
 import useAppSelector from '../../hooks/app-selector';
@@ -23,7 +23,7 @@ import useAppDispatch from '../../hooks/app-dispatch';
 import { userRouts } from '../../router/routs';
 import { getUserProfile } from '../../utils/http/user';
 import { UrlParamsContext } from '../../store/http/url-params-context';
-import { setRockets } from '../../store/rockets/rockets-slice';
+import { setPlaces } from '../../store/places/places-slice';
 
 const ProfileContentContainer = styled(Container)`
   display: flex;
@@ -89,55 +89,56 @@ const AsideActions = styled.div`
   }
 `;
 
-const RocketsContentWrapper = styled.div`
+const PlacesContentWrapper = styled.div`
   position: relative;
   width: 100%;
 `;
 
 const Profile: React.FC = () => {
   const { user, token } = useAppSelector((state) => state.auth);
-  const appRockets = useAppSelector((state) => state.rockets.rockets);
+  const appPlaces = useAppSelector((state) => state.places.places);
   const { urlParams, setUrlParams } = useContext(UrlParamsContext);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const { data, isSuccess, isPending, isError, error } = useQuery({
-    queryKey: ['rockets', urlParams],
+    queryKey: ['places', urlParams],
     queryFn: ({ signal }) => getUserProfile({ userId: user.id, token, urlParams, signal }),
     staleTime: 5000,
   });
 
-  let rocketsContent;
-  const clearRockets = useRef(true);
-  const { rockets, currentPage, hasNextPage, currentAmount, rocketsAmount, favoritesAmount, sharedAmount } = data || {};
+  let placesContent;
+  const clearPlaces = useRef(true);
+  const { places, currentPage, hasNextPage, currentPlacesAmount, placesAmount, favoritesAmount, sharedAmount } =
+    data || {};
 
-  const handleFilterRockets = ({ target }: React.MouseEvent) => {
+  const handleFilterPlaces = ({ target }: React.MouseEvent) => {
     const dataValue = (target as HTMLButtonElement).dataset.filter || '';
     setUrlParams({ filter: dataValue, page: 1, search: '' });
   };
-
-  const handleLoadMoreRockets = () => {
-    setUrlParams({ page: currentPage + 1 });
-    clearRockets.current = false;
+  console.log(places);
+  const handleLoadMorePlaces = () => {
+    setUrlParams({ page: (currentPage || 1) + 1 });
+    clearPlaces.current = false;
   };
 
   useEffect(() => {
     if (isSuccess) {
-      dispatch(setRockets({ rockets, clearOld: clearRockets.current }));
-      clearRockets.current = true;
+      dispatch(setPlaces({ places: places!, clearOld: clearPlaces.current }));
+      clearPlaces.current = true;
     }
-  }, [isSuccess, dispatch, rockets]);
+  }, [isSuccess, dispatch, places]);
 
   if (isError && !isPending) {
-    rocketsContent = <ErrorBlock message={error.message} />;
+    placesContent = <ErrorBlock message={error.message} />;
   }
 
   if (isPending) {
-    rocketsContent = <Loader />;
+    placesContent = <Loader />;
   }
 
   if (isSuccess && !isPending) {
-    rocketsContent = <RocketsList rockets={appRockets} />;
+    placesContent = <PlacesList places={appPlaces} />;
   }
 
   return (
@@ -152,24 +153,24 @@ const Profile: React.FC = () => {
             <UserName>{user.name}</UserName>
             <AsideContentActions>
               <AsideContentAction
-                text={`${rocketsAmount || 0} total`}
+                text={`${placesAmount || 0} total`}
                 mode="primary"
                 icon={['fas', 'space-shuttle']}
-                onClick={handleFilterRockets}
+                onClick={handleFilterPlaces}
               />
               <AsideContentAction
                 text={`${favoritesAmount || 0} favorites`}
                 mode="primary"
                 icon={['far', 'heart']}
                 data-filter="favorites"
-                onClick={handleFilterRockets}
+                onClick={handleFilterPlaces}
               />
               <AsideContentAction
                 text={`${sharedAmount || 0} shared`}
                 mode="primary"
                 icon={['far', 'share-square']}
                 data-filter="shared"
-                onClick={handleFilterRockets}
+                onClick={handleFilterPlaces}
               />
             </AsideContentActions>
           </AsideContent>
@@ -179,7 +180,7 @@ const Profile: React.FC = () => {
               mode="primary"
               icon={['fas', 'rotate']}
               disabled={!hasNextPage}
-              onClick={handleLoadMoreRockets}
+              onClick={handleLoadMorePlaces}
             />
             <Button
               text="Edit profile"
@@ -191,17 +192,17 @@ const Profile: React.FC = () => {
               text="Create new place"
               icon={['fas', 'rocket']}
               aria-haspopup="true"
-              onClick={() => navigate(userRouts.ADD_ROCKET)}
+              onClick={() => navigate(userRouts.ADD_PLACE)}
             />
           </AsideActions>
         </Aside>
         <ProfileSection>
           <ToolsBar />
-          <RocketsStatusBar loaded={appRockets.length} from={currentAmount} />
-          <RocketsContentWrapper>
+          <PlacesStatusBar loaded={appPlaces.length} from={currentPlacesAmount || 0} />
+          <PlacesContentWrapper>
             <Title tag="h2">{`${urlParams?.filter || 'All'} places`}</Title>
-            {rocketsContent}
-          </RocketsContentWrapper>
+            {placesContent}
+          </PlacesContentWrapper>
         </ProfileSection>
       </ProfileContentContainer>
       <Outlet />

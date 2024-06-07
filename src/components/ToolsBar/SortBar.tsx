@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 
 import useAppDispatch from '../../hooks/app-dispatch';
 
-import { sortRockets } from '../../store/rockets/rockets-slice';
+import { sortPlaces } from '../../store/places/places-slice';
 
 const SortButtonsWrapper = styled.div`
   background-color: var(--color-1--1);
@@ -58,7 +58,7 @@ const SortBar: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(sortRockets(sortParamValue));
+    dispatch(sortPlaces(sortParamValue));
   }, [sortParamValue, dispatch]);
 
   return (

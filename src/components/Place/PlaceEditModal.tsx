@@ -16,50 +16,51 @@ import ContentWrapper from '../UI/Helpers/ContentWrapper';
 import useAppSelector from '../../hooks/app-selector';
 import useAppDispatch from '../../hooks/app-dispatch';
 
-import { RocketEditSchema } from '../../schemas/form-validation/rockets';
-import { Rocket, RocketEditInputValues } from '../../models/rockets';
-import { getRocket } from '../../utils/http/rockets';
-import { editRocket } from '../../utils/http/rockets';
+import { PlaceEditSchema } from '../../schemas/form-validation/places';
+import { PlaceEditInputValues, ResponseEditPlaceData } from '../../models/places';
+import { getPlace } from '../../utils/http/places';
+import { editPlace } from '../../utils/http/places';
 import { showNotification } from '../../store/notification/notification-slice';
-import { ServerError, ResponseError } from '../../models/http-error';
+import { ServerInputError, ResponseError } from '../../models/http-error';
 
-const RocketEditModal: React.FC = () => {
+const PlaceEditModal: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
   const { token } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { id: rocketId } = useParams();
+  const { id: placeId } = useParams();
 
-  const queryKey = ['rockets', rocketId];
+  const queryKey = ['places', placeId];
 
   const { data, isPending, isError, error } = useQuery({
     queryKey,
-    queryFn: ({ signal }) => getRocket({ signal, rocketId: rocketId! }),
+    queryFn: ({ signal }) => getPlace({ signal, placeId: placeId! }),
   });
 
+  // need to rewrite to the custom hook
   const { mutate } = useMutation({
-    mutationFn: editRocket,
-    onMutate: async ({ rocketData }) => {
+    mutationFn: editPlace,
+    onMutate: async ({ placeData }) => {
       await queryClient.cancelQueries({ queryKey });
 
-      const { rocket: oldRocket }: { rocket: Rocket } = queryClient.getQueryData(queryKey)!;
-      const newRocket = { rocket: { ...oldRocket, ...rocketData } };
+      const { place: oldPlace }: ResponseEditPlaceData = queryClient.getQueryData(queryKey)!;
+      const updatedPlace = { place: { ...oldPlace, ...placeData } };
 
-      queryClient.setQueryData(queryKey, newRocket);
+      queryClient.setQueryData(queryKey, updatedPlace);
       navigate(-1);
 
-      return { oldRocket };
+      return { oldPlace };
     },
     onSuccess(data) {
-      dispatch(showNotification({ message: data.message, status: 'success' }));
+      dispatch(showNotification({ message: data!.message, status: 'success' }));
     },
     onError(error: ResponseError, data, context) {
-      queryClient.setQueryData(queryKey, { rocket: context?.oldRocket });
+      queryClient.setQueryData(queryKey, { place: context?.oldPlace });
       dispatch(showNotification({ message: error.message, status: 'error' }));
 
       if (error.errors && error.errors.length) {
-        error.errors.forEach((error: ServerError) => data.setFieldError!(error.field, error.message));
+        error.errors.forEach((error: ServerInputError) => data.setFieldError!(error.field, error.message));
       }
     },
     onSettled() {
@@ -69,9 +70,9 @@ const RocketEditModal: React.FC = () => {
 
   let modalContent;
 
-  const initialInputValues: RocketEditInputValues = {
-    title: data?.rocket.title || '',
-    description: data?.rocket.description || '',
+  const initialInputValues: PlaceEditInputValues = {
+    title: data?.place.title || '',
+    description: data?.place.description || '',
     image: '',
   };
 
@@ -80,10 +81,10 @@ const RocketEditModal: React.FC = () => {
     setTimeout(() => navigate(-1), 200);
   };
 
-  const handleSubmit = (values: RocketEditInputValues, actions: FormikHelpers<RocketEditInputValues>) => {
+  const handleSubmit = (values: PlaceEditInputValues, actions: FormikHelpers<PlaceEditInputValues>) => {
     mutate({
-      rocketData: values,
-      rocketId: rocketId!,
+      placeData: values,
+      placeId: placeId!,
       token: token!,
       setFieldError: actions.setFieldError,
     });
@@ -99,8 +100,8 @@ const RocketEditModal: React.FC = () => {
 
   if (data && !isPending) {
     modalContent = (
-      <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={RocketEditSchema}>
-        {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<RocketEditInputValues>) => (
+      <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={PlaceEditSchema}>
+        {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<PlaceEditInputValues>) => (
           <Form
             actions={
               <>
@@ -118,14 +119,14 @@ const RocketEditModal: React.FC = () => {
               id="image"
               name="image"
               label="Image"
-              imagePath={data.rocket.image}
+              imagePath={data.place.image}
               onSetFieldValue={setFieldValue}
               onSetFieldTouched={setFieldTouched}
             />
-            <Input type="text" label="Title" placeholder="enter rocket title" id="title" name="title" required />
+            <Input type="text" label="Title" placeholder="enter place title" id="title" name="title" required />
             <Input
               label="Description"
-              placeholder="enter rocket description"
+              placeholder="enter place description"
               id="description"
               name="description"
               inputType="textarea"
@@ -147,4 +148,4 @@ const RocketEditModal: React.FC = () => {
   );
 };
 
-export default RocketEditModal;
+export default PlaceEditModal;

@@ -12,7 +12,7 @@ const fileSizeValidation = (file: any) => {
   return file.size <= FILE_SIZE_BYTES;
 };
 
-export const RocketCreateSchema = object().shape({
+export const PlaceCreateSchema = object().shape({
   address: string().min(5, 'Enter a valid place address').required('Field must not be empty'),
   title: string().min(3, 'Title must be at least 3 characters long').required('Field must not be empty'),
   image: mixed()
@@ -24,7 +24,7 @@ export const RocketCreateSchema = object().shape({
     .required('Field must not be empty'),
 });
 
-export const RocketEditSchema = object().shape({
+export const PlaceEditSchema = object().shape({
   title: string().min(3, 'Title must be at least 3 characters long').required('Field must not be empty'),
   image: mixed()
     .test('fileFormat', 'Only .jpg, .png, .jpeg are allowed', fileFormatValidation)

@@ -7,11 +7,11 @@ export const userRouts = {
   SIGNUP: `${baseRouts.HOME}/signup`,
   PROFILE: `${baseRouts.HOME}/user/:id`,
   EDIT_PROFILE: 'edit',
-  ADD_ROCKET: 'rocket/create',
+  ADD_PLACE: 'place/create',
 };
 
-export const rocketRouts = {
-  ALL_ROCKETS: 'rockets',
-  DETAIL_ROCKET: `${baseRouts.HOME}/rocket/:id`,
-  EDIT_ROCKET: 'edit',
+export const placeRouts = {
+  ALL_Places: 'places',
+  DETAIL_PLACE: `${baseRouts.HOME}/place/:id`,
+  EDIT_PLACE: 'edit',
 };

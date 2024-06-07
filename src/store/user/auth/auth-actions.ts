@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { SignupInputValues, SigninInputValues } from '../../../models/user';
+import { SignupInputValues, SigninInputValues, ResponseUserAuthData } from '../../../models/user';
 import { setUserData } from './auth-slice';
 import { AppDispatch } from '../..';
 import { setUserCookies, getUserCookies, removeUserCookies } from '../../../utils/helpers/user-cookies';
@@ -28,7 +28,7 @@ export const auth = (mode: 'signin' | 'signup', userData: SignupInputValues | Si
     }
 
     try {
-      const response = await axios.post(url, requestData);
+      const response = (await axios.post(url, requestData)) as ResponseUserAuthData;
       const tokenExpirationDate = new Date().getTime() + response.data.tokenExpiration; // calculate expires token time in future
 
       dispatch(setUserData({ isAuth: true, token: response.data.token, user: response.data.user }));
@@ -41,6 +41,7 @@ export const auth = (mode: 'signin' | 'signup', userData: SignupInputValues | Si
       return { message: response.data.message };
     } catch (e: any) {
       if (e.response) {
+        console.log(e.response);
         throw new HttpError(e.response.data.message, e.response.data.errors);
       }
 

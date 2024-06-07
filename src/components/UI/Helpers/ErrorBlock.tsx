@@ -69,8 +69,7 @@ const ErrorBlock: React.FC<ErrorBlockProps> = ({ title, message }) => {
           <FontAwesomeIcon icon={['far', 'face-sad-tear']} />
         </ErrorIcon>
       </ErrorTitlteWrap>
-
-      <ErrorMessage>{message || 'Failed to fetch Rockets. Please, try again later.'}</ErrorMessage>
+      <ErrorMessage>{message || 'Failed to fetch Places. Please, try again later.'}</ErrorMessage>
     </ErrorContainer>
   );
 };

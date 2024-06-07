@@ -9,12 +9,12 @@ const StatusBar = styled.p`
   text-align: center;
 `;
 
-interface RocketsStatusBarProps {
+interface PlacesStatusBarProps {
   loaded: number;
   from: number | string;
 }
 
-const RocketsStatusBar: React.FC<RocketsStatusBarProps> = ({ loaded, from }) => {
+const PlacesStatusBar: React.FC<PlacesStatusBarProps> = ({ loaded, from }) => {
   return (
     <StatusBar>
       Loaded {loaded} place{loaded > 1 ? 's' : ''} from {from}
@@ -22,4 +22,4 @@ const RocketsStatusBar: React.FC<RocketsStatusBarProps> = ({ loaded, from }) => 
   );
 };
 
-export default RocketsStatusBar;
+export default PlacesStatusBar;

@@ -5,13 +5,13 @@ import { Pagination, A11y, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-import RocketItem from './RocketItem';
+import PlaceItem from './PlaceItem';
 import Button from '../UI/Base/Button';
 import ContentWrapper from '../UI/Helpers/ContentWrapper';
 
-import { RocketsSliderProps } from '../../models/rockets';
+import { PlacesSliderProps } from '../../models/places';
 
-const RocketsSliderWrapper = styled.div`
+const PlacesSliderWrapper = styled.div`
   padding-top: 70px;
   position: relative;
   width: 100%;
@@ -21,7 +21,7 @@ const RocketsSliderWrapper = styled.div`
   }
 `;
 
-const RocketsSwiper = styled(Swiper)`
+const PlacesSwiper = styled(Swiper)`
   margin: 0 -12px;
 
   & .swiper-button-prev,
@@ -67,7 +67,7 @@ const RocketsSwiper = styled(Swiper)`
   }
 `;
 
-const RocketsSlide = styled(SwiperSlide)`
+const PlacesSlide = styled(SwiperSlide)`
   height: auto;
   padding: 0 12px;
 `;
@@ -96,17 +96,17 @@ const DummyText = styled.p`
   font-size: 2.2rem;
 `;
 
-const RocketsSlider: React.FC<RocketsSliderProps> = ({ rockets, slidesPerView, ...props }) => {
-  if (!rockets.length) {
+const PlacesSlider: React.FC<PlacesSliderProps> = ({ places, slidesPerView, ...props }) => {
+  if (!places.length) {
     return (
       <ContentWrapper>
-        <DummyText>There are no rockets now :(</DummyText>
+        <DummyText>There are no places now :(</DummyText>
       </ContentWrapper>
     );
   }
 
   return (
-    <RocketsSliderWrapper {...props}>
+    <PlacesSliderWrapper {...props}>
       <NavWrapper>
         <NavButton
           mode="secondary"
@@ -125,7 +125,7 @@ const RocketsSlider: React.FC<RocketsSliderProps> = ({ rockets, slidesPerView, .
           onlyIcon
         />
       </NavWrapper>
-      <RocketsSwiper
+      <PlacesSwiper
         modules={[Navigation, Pagination, A11y]}
         pagination={{ clickable: true }}
         navigation={{
@@ -138,16 +138,16 @@ const RocketsSlider: React.FC<RocketsSliderProps> = ({ rockets, slidesPerView, .
           1279: { slidesPerView: slidesPerView?.desktop || 3 },
         }}
       >
-        {rockets.map((rocket) => {
+        {places.map((place) => {
           return (
-            <RocketsSlide key={rocket.id}>
-              <RocketItem rocket={rocket} />
-            </RocketsSlide>
+            <PlacesSlide key={place.id}>
+              <PlaceItem place={place} />
+            </PlacesSlide>
           );
         })}
-      </RocketsSwiper>
-    </RocketsSliderWrapper>
+      </PlacesSwiper>
+    </PlacesSliderWrapper>
   );
 };
 
-export default RocketsSlider;
+export default PlacesSlider;

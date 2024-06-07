@@ -15,14 +15,14 @@ import Checkbox from '../UI/Form/Elements/Checkbox';
 import useAppDispatch from '../../hooks/app-dispatch';
 import useAppSelector from '../../hooks/app-selector';
 
-import { RocketCreateInputValues } from '../../models/rockets';
-import { RocketCreateSchema } from '../../schemas/form-validation/rockets';
+import { PlaceCreateInputValues } from '../../models/places';
+import { PlaceCreateSchema } from '../../schemas/form-validation/places';
 import { showNotification } from '../../store/notification/notification-slice';
-import { createRocket } from '../../utils/http/rockets';
+import { createPlace } from '../../utils/http/places';
 import { UrlParamsContext } from '../../store/http/url-params-context';
-import { ServerError, ResponseError } from '../../models/http-error';
+import { ServerInputError, ResponseError } from '../../models/http-error';
 
-const RocketCreateModal: React.FC = () => {
+const PlaceCreateModal: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
   const { token, user } = useAppSelector((state) => state.auth);
   const { urlParams, setUrlParams } = useContext(UrlParamsContext);
@@ -31,29 +31,29 @@ const RocketCreateModal: React.FC = () => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation({
-    mutationFn: createRocket,
+    mutationFn: createPlace,
     onSuccess(data) {
       const newUrlParams = { filter: '', page: 1, search: '' };
 
       if (isequal(urlParams, newUrlParams)) {
-        queryClient.invalidateQueries({ queryKey: ['rockets'] });
+        queryClient.invalidateQueries({ queryKey: ['places'] });
       } else {
         setUrlParams(newUrlParams);
       }
 
-      dispatch(showNotification({ message: data.message, status: 'success' }));
+      dispatch(showNotification({ message: data!.message, status: 'success' }));
       navigate(-1);
     },
     onError(error: ResponseError, data) {
       dispatch(showNotification({ message: error.message, status: 'error' }));
 
       if (error.errors && error.errors.length) {
-        error.errors.forEach((error: ServerError) => data.setFieldError!(error.field, error.message));
+        error.errors.forEach((error: ServerInputError) => data.setFieldError!(error.field, error.message));
       }
     },
   });
 
-  const initialInputValues: RocketCreateInputValues = {
+  const initialInputValues: PlaceCreateInputValues = {
     image: '',
     title: '',
     description: '',
@@ -66,14 +66,14 @@ const RocketCreateModal: React.FC = () => {
     setTimeout(() => navigate(-1), 200);
   };
 
-  const handleSubmit = async (values: RocketCreateInputValues, actions: FormikHelpers<RocketCreateInputValues>) => {
-    mutate({ rocketData: values, userId: user.id, token: token!, setFieldError: actions.setFieldError });
+  const handleSubmit = async (values: PlaceCreateInputValues, actions: FormikHelpers<PlaceCreateInputValues>) => {
+    mutate({ placeData: values, userId: user.id, token: token!, setFieldError: actions.setFieldError });
   };
 
   return (
     <Modal title="Create new place" showModal={showModal} onShowModal={handleShowModal}>
-      <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={RocketCreateSchema}>
-        {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<RocketCreateInputValues>) => (
+      <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={PlaceCreateSchema}>
+        {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<PlaceCreateInputValues>) => (
           <Form
             actions={
               <>
@@ -94,10 +94,10 @@ const RocketCreateModal: React.FC = () => {
               onSetFieldValue={setFieldValue}
               onSetFieldTouched={setFieldTouched}
             />
-            <Input type="text" label="Title" placeholder="enter rocket title" id="title" name="title" required />
+            <Input type="text" label="Title" placeholder="enter place title" id="title" name="title" required />
             <Input
               label="Description"
-              placeholder="enter rocket description"
+              placeholder="enter place description"
               id="description"
               name="description"
               inputType="textarea"
@@ -105,15 +105,8 @@ const RocketCreateModal: React.FC = () => {
               rows={5}
               required
             />
-            <Input
-              type="text"
-              label="Address"
-              placeholder="enter rocket address"
-              id="address"
-              name="address"
-              required
-            />
-            <Checkbox label="Share rocket with people" name="shared" id="shared" />
+            <Input type="text" label="Address" placeholder="enter place address" id="address" name="address" required />
+            <Checkbox label="Share place with people" name="shared" id="shared" />
           </Form>
         )}
       </Formik>
@@ -121,4 +114,4 @@ const RocketCreateModal: React.FC = () => {
   );
 };
 
-export default RocketCreateModal;
+export default PlaceCreateModal;
