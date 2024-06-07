@@ -113,11 +113,13 @@ const RocketsSlider: React.FC<RocketsSliderProps> = ({ rockets, slidesPerView, .
           text="Previous"
           className="review-swiper-button-prev"
           icon={['fas', 'angle-left']}
+          title="Previous"
           onlyIcon
         />
         <NavButton
           mode="secondary"
           text="Next"
+          title="Next"
           className="review-swiper-button-next"
           icon={['fas', 'angle-right']}
           onlyIcon

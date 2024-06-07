@@ -107,11 +107,9 @@ const RocketEditModal: React.FC = () => {
                 <Button text="Cancel" onClick={handleShowModal} />
                 <Button
                   type="submit"
-                  text={isSubmitting ? 'Submitting' : 'Edit'}
+                  text={isSubmitting ? 'Editing...' : 'Edit'}
                   mode="secondary"
                   disabled={(!isValid || !dirty) && !isSubmitting}
-                  data-valid={isValid}
-                  data-dirty={dirty}
                 />
               </>
             }
@@ -142,7 +140,7 @@ const RocketEditModal: React.FC = () => {
   }
 
   return (
-    <Modal title="Edit rocket" showModal={showModal} onShowModal={handleShowModal}>
+    <Modal title="Edit place" showModal={showModal} onShowModal={handleShowModal}>
       {modalContent}
       {isError && !isPending && <ErrorBlock message={error.message} />}
     </Modal>

@@ -11,6 +11,7 @@ import { ButtonProps } from '../../../models/button';
 
 const DropdownContainer = styled.div`
   position: relative;
+  margin-left: auto;
 `;
 
 const DropdownBlock = styled.div`

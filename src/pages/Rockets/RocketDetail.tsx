@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useParams, useNavigate, Outlet } from 'react-router-dom';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { styled } from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Loader from '../../components/UI/Helpers/Loader';
 import Section from '../../components/UI/Base/Section';
@@ -11,6 +13,8 @@ import ErrorBlock from '../../components/UI/Helpers/ErrorBlock';
 import DropdownButton from '../../components/UI/Base/DropdownButton';
 import Button from '../../components/UI/Base/Button';
 import Map from '../../components/UI/Base/Map';
+import Modal from '../../components/UI/Base/Modal';
+import Link from '../../components/UI/Base/Link';
 
 import useAppSelector from '../../hooks/app-selector';
 import useAppDispatch from '../../hooks/app-dispatch';
@@ -38,40 +42,85 @@ const RocketContent = styled.article`
   width: 50%;
 `;
 
-const RocketHeader = styled.header`
-  align-items: center;
+const RocketContentWrapper = styled.div`
+  &:not(:last-child) {
+    margin-bottom: 40px;
+  }
+`;
+
+const RocketContentText = styled.p`
+  color: var(--color-4--5);
+  font-size: 2rem;
+`;
+
+const RocketContentIcon = styled.span`
+  display: inline-block;
+  margin-right: 15px;
+`;
+
+const RocketContentTags = styled.div`
+  align-items: flex-start;
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 30px;
+  flex-wrap: wrap;
+`;
+
+const RocketContentTag = styled.p`
+  align-items: center;
+  background-color: var(--color-2--1);
+  border-radius: 10px;
+  color: var(--color-1--3);
+  display: flex;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0 5px;
+  padding: 5px 15px;
+  width: fit-content;
+`;
+
+const RocketHeader = styled.header`
+  align-items: flex-start;
+  display: flex;
+  margin-bottom: 40px;
   position: relative;
 `;
 
-const RocketTitlte = styled.h3`
-  color: var(--color-1--3);
-  font-size: 4.5rem;
-  margin-right: 20px;
+const RocketHeaderTag = styled.span<{ $isShared: boolean }>`
+  background-color: ${({ $isShared }) => ($isShared ? 'var(--color-green-dark)' : 'var(--color-red-dark)')};
+  border-radius: 10px;
+  color: var(--color-white);
+  margin: 0 25px;
+  padding: 5px 15px;
 `;
 
-const RocketDescription = styled.div`
+const RocketTitle = styled.h3`
+  color: var(--color-1--3);
+  font-size: 4.5rem;
+  line-height: 1;
+`;
+
+const RocketDescription = styled(RocketContentWrapper)`
   border: 1px solid var(--color-4--5);
   border-radius: 10px;
-  margin-bottom: 40px;
   padding: 15px;
 `;
 
-const RocketContetnTitle = styled.h4`
+const RocketContentTitle = styled.h4`
   color: var(--color-1--3);
   font-size: 2.2rem;
   margin-bottom: 20px;
 `;
 
-const RocketDescriptionText = styled.p`
-  color: var(--color-4--5);
-  font-size: 2rem;
+const RocketAuthorContent = styled.div`
+  display: flex;
 `;
 
-const RocketLocation = styled.div`
-  margin-bottom: 40px;
+const RocketAuthorPicture = styled.picture`
+  border-radius: 10px;
+  display: block;
+  height: 150px;
+  margin-right: 20px;
+  overflow: hidden;
+  width: 140px;
 `;
 
 const RocketMapContainer = styled.div`
@@ -79,7 +128,14 @@ const RocketMapContainer = styled.div`
   width: 100%;
 `;
 
+const ModalContentText = styled.p`
+  color: var(--color-red-dark);
+  font-size: 2.5rem;
+  text-align: center;
+`;
+
 const RocketDetail: React.FC = () => {
+  const [showRemoveRocketModal, setShowRemoveRocketModal] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const dispatch = useAppDispatch();
@@ -105,7 +161,7 @@ const RocketDetail: React.FC = () => {
     },
   });
 
-  const { mutate: removeRocket } = useMutation({
+  const { mutate: removeRocket, isPending: isRemoving } = useMutation({
     mutationFn: deleteRocket,
     onSuccess(data) {
       queryClient.invalidateQueries({ queryKey });
@@ -117,7 +173,7 @@ const RocketDetail: React.FC = () => {
     },
   });
 
-  const showMoreActions = data ? user.id === data.rocket.creator : null;
+  const isAuthorized = user.id === data?.rocket.creator.id;
 
   const handleShareRocket = () => {
     shareRocket({
@@ -128,8 +184,12 @@ const RocketDetail: React.FC = () => {
     });
   };
 
-  const handleDeleteRocket = () => {
+  const handleRemoveRocket = () => {
     removeRocket({ rocketId: rocketId!, token: token! });
+  };
+
+  const handleShowRemoveRocketModal = () => {
+    setShowRemoveRocketModal((show) => !show);
   };
 
   let content;
@@ -143,6 +203,11 @@ const RocketDetail: React.FC = () => {
   }
 
   if (isSuccess && data && !isPending) {
+    const formatedDate = new Date(data.rocket.createdAt).toLocaleString('en-US', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
     content = (
       <RocketWrapper>
         <RocketPicture>
@@ -150,9 +215,20 @@ const RocketDetail: React.FC = () => {
         </RocketPicture>
         <RocketContent>
           <RocketHeader>
-            <RocketTitlte>{data.rocket.title}</RocketTitlte>
-            {showMoreActions && (
-              <DropdownButton text="more rocket actions" icon={['fas', 'ellipsis-vertical']} mode="secondary" onlyIcon>
+            <RocketTitle>{data.rocket.title}</RocketTitle>
+            {isAuthorized && (
+              <RocketHeaderTag $isShared={data.rocket.shared}>
+                {data.rocket.shared ? 'shared' : 'not shared'}
+              </RocketHeaderTag>
+            )}
+            {isAuthorized && (
+              <DropdownButton
+                title="more"
+                text="more rocket actions"
+                icon={['fas', 'ellipsis-vertical']}
+                mode="secondary"
+                onlyIcon
+              >
                 <ul>
                   <li>
                     <Button
@@ -169,22 +245,70 @@ const RocketDetail: React.FC = () => {
                     />
                   </li>
                   <li>
-                    <Button text="delete" icon={['far', 'trash-can']} onClick={handleDeleteRocket} />
+                    <Button text="delete" icon={['far', 'trash-can']} onClick={handleShowRemoveRocketModal} />
                   </li>
                 </ul>
               </DropdownButton>
             )}
           </RocketHeader>
           <RocketDescription>
-            <RocketContetnTitle>Overview</RocketContetnTitle>
-            <RocketDescriptionText>{data.rocket.description}</RocketDescriptionText>
+            <RocketContentTitle>Overview</RocketContentTitle>
+            <RocketContentText>{data.rocket.description}</RocketContentText>
           </RocketDescription>
-          <RocketLocation>
-            <RocketContetnTitle>Location</RocketContetnTitle>
+          <RocketContentWrapper>
+            <RocketContentTitle>Author</RocketContentTitle>
+            <RocketAuthorContent>
+              <RocketAuthorPicture>
+                <img src={`${process.env.REACT_APP_BACKEND_URL}/${data.rocket.creator.image}`} alt="Rocket author" />
+              </RocketAuthorPicture>
+              <RocketContentTags>
+                <RocketContentTag>
+                  <RocketContentIcon>
+                    <FontAwesomeIcon icon={['fas', 'user-astronaut']} />
+                  </RocketContentIcon>{' '}
+                  {data.rocket.creator.name}
+                </RocketContentTag>
+                <RocketContentTag>
+                  <RocketContentIcon>
+                    <FontAwesomeIcon icon={['fas', 'rocket']} />
+                  </RocketContentIcon>
+                  {data.userRocketsAmount}
+                </RocketContentTag>
+                <RocketContentTag>
+                  <RocketContentIcon>
+                    <FontAwesomeIcon icon={['fas', 'star']} />
+                  </RocketContentIcon>
+                  {data.userRating}
+                </RocketContentTag>
+              </RocketContentTags>
+            </RocketAuthorContent>
+          </RocketContentWrapper>
+          <RocketContentWrapper>
+            <RocketContentTitle>Location</RocketContentTitle>
             <RocketMapContainer>
-              <Map center={data.rocket.location} markerTitle={data.rocket.title} />
+              <Map center={data.rocket.location} markerTitle={data.rocket.address} />
             </RocketMapContainer>
-          </RocketLocation>
+          </RocketContentWrapper>
+          <RocketContentWrapper>
+            <RocketContentTitle>Details</RocketContentTitle>
+            <RocketContentTags>
+              <RocketContentTag>
+                <RocketContentIcon>
+                  <FontAwesomeIcon icon={['far', 'heart']} />
+                </RocketContentIcon>
+                {`${data.rocket.likesAmount} like${data.rocket.likesAmount > 1 ? 's' : ''}`}
+              </RocketContentTag>
+              <RocketContentTag>
+                <RocketContentIcon>
+                  <FontAwesomeIcon icon={['far', 'clock']} />
+                </RocketContentIcon>
+                {formatedDate}
+              </RocketContentTag>
+            </RocketContentTags>
+          </RocketContentWrapper>
+          <RocketContentWrapper>
+            <Link text="see all user places" type="router-link" to="/" />
+          </RocketContentWrapper>
         </RocketContent>
       </RocketWrapper>
     );
@@ -197,6 +321,23 @@ const RocketDetail: React.FC = () => {
         <Container size="lg">{content}</Container>
       </Section>
       <Outlet />
+      {showRemoveRocketModal && (
+        <Modal
+          title="Deleting rocket"
+          showModal={showRemoveRocketModal}
+          onShowModal={handleShowRemoveRocketModal}
+          actions={
+            <Button
+              text={isRemoving ? 'deleting...' : 'delete'}
+              disabled={isRemoving}
+              mode="secondary"
+              onClick={handleRemoveRocket}
+            />
+          }
+        >
+          <ModalContentText>Are you sure you want to remove the place ?</ModalContentText>
+        </Modal>
+      )}
     </>
   );
 };

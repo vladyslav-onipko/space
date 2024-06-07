@@ -131,6 +131,7 @@ const Notification: React.FC = () => {
           mode="default"
           text="Close"
           icon={['fas', 'xmark']}
+          title="close"
           onlyIcon
           onClick={handleCloseNotification}
         />

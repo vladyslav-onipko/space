@@ -2,17 +2,15 @@ import axios from 'axios';
 
 import HttpError from '../../models/http-error';
 
-import { Rocket, RocketCreateInputValues, RocketEditInputValues } from '../../models/rockets';
+import {
+  GetRocketConfig,
+  ResponseGetRocketData,
+  CreateRocketConfig,
+  EditRocketConfig,
+  DeleteRocketConfig,
+} from '../../models/rockets';
 
-interface getRocketConfig {
-  rocketId: string;
-  signal: any;
-}
-
-export const getRocket = async ({
-  rocketId,
-  signal,
-}: getRocketConfig): Promise<{ message: string; rocket: Rocket } | undefined> => {
+export const getRocket = async ({ rocketId, signal }: GetRocketConfig): Promise<ResponseGetRocketData | undefined> => {
   const url = `${process.env.REACT_APP_BACKEND_URL}/api/rockets/${rocketId}`;
 
   try {
@@ -30,14 +28,7 @@ export const getRocket = async ({
   }
 };
 
-interface createRocketConfig {
-  rocketData: RocketCreateInputValues;
-  userId: string;
-  token: string;
-  setFieldError?: (field: string, errorMsg: string) => void;
-}
-
-export const createRocket = async ({ rocketData, userId, token }: createRocketConfig) => {
+export const createRocket = async ({ rocketData, userId, token }: CreateRocketConfig) => {
   const requestData = new FormData();
 
   requestData.append('address', rocketData.address);
@@ -66,14 +57,6 @@ export const createRocket = async ({ rocketData, userId, token }: createRocketCo
     }
   }
 };
-
-interface EditRocketConfig {
-  rocketData: RocketEditInputValues | {};
-  rocketId: string;
-  token: string;
-  shared?: boolean;
-  setFieldError?: (field: string, errorMsg: string) => void;
-}
 
 export const editRocket = async ({ rocketData, rocketId, token, shared }: EditRocketConfig) => {
   const requestData = new FormData();
@@ -104,11 +87,6 @@ export const editRocket = async ({ rocketData, rocketId, token, shared }: EditRo
     }
   }
 };
-
-interface DeleteRocketConfig {
-  rocketId: string;
-  token: string;
-}
 
 export const deleteRocket = async ({ rocketId, token }: DeleteRocketConfig) => {
   try {

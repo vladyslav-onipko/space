@@ -71,7 +71,7 @@ const RocketCreateModal: React.FC = () => {
   };
 
   return (
-    <Modal title="Create new rocket" showModal={showModal} onShowModal={handleShowModal}>
+    <Modal title="Create new place" showModal={showModal} onShowModal={handleShowModal}>
       <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={RocketCreateSchema}>
         {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<RocketCreateInputValues>) => (
           <Form
@@ -81,7 +81,7 @@ const RocketCreateModal: React.FC = () => {
                 <Button
                   disabled={(!isValid || !dirty) && !isSubmitting}
                   type="submit"
-                  text={isSubmitting ? 'Submitting...' : 'Add'}
+                  text={isSubmitting ? 'Creating...' : 'Create'}
                   mode="secondary"
                 />
               </>

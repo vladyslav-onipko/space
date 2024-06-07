@@ -70,6 +70,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ show, onShowNav }) => {
           text="Close navigation"
           mode="secondary"
           icon={['fas', 'xmark']}
+          title="close"
           onlyIcon
           onClick={() => onShowNav}
         />

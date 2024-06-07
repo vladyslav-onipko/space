@@ -1,7 +1,9 @@
 import { ComponentPropsWithoutRef } from 'react';
+import { User } from './user';
 
 export interface Rocket {
   id: string;
+  address: string;
   location: google.maps.LatLngLiteral;
   image: string;
   title: string;
@@ -9,8 +11,8 @@ export interface Rocket {
   likes: string[];
   shared: boolean;
   createdAt: string;
-  creator: string;
-  rating: number;
+  creator: User;
+  likesAmount: number;
 }
 
 export interface RocketItemProps extends ComponentPropsWithoutRef<'article'> {
@@ -39,4 +41,36 @@ export interface RocketEditInputValues {
 export interface RocketCreateInputValues extends RocketEditInputValues {
   address: string;
   shared: boolean;
+}
+
+export interface GetRocketConfig {
+  rocketId: string;
+  signal: any;
+}
+
+export interface ResponseGetRocketData {
+  message: string;
+  rocket: Rocket;
+  userRocketsAmount: number;
+  userRating: number;
+}
+
+export interface CreateRocketConfig {
+  rocketData: RocketCreateInputValues;
+  userId: string;
+  token: string;
+  setFieldError?: (field: string, errorMsg: string) => void;
+}
+
+export interface EditRocketConfig {
+  rocketData: RocketEditInputValues | {};
+  rocketId: string;
+  token: string;
+  shared?: boolean;
+  setFieldError?: (field: string, errorMsg: string) => void;
+}
+
+export interface DeleteRocketConfig {
+  rocketId: string;
+  token: string;
 }

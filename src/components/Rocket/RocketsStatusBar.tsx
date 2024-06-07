@@ -10,14 +10,14 @@ const StatusBar = styled.p`
 `;
 
 interface RocketsStatusBarProps {
-  loaded: number | string;
+  loaded: number;
   from: number | string;
 }
 
 const RocketsStatusBar: React.FC<RocketsStatusBarProps> = ({ loaded, from }) => {
   return (
     <StatusBar>
-      Loaded {loaded} rockets from {from}
+      Loaded {loaded} place{loaded > 1 ? 's' : ''} from {from}
     </StatusBar>
   );
 };

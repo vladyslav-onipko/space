@@ -109,7 +109,7 @@ const Profile: React.FC = () => {
 
   let rocketsContent;
   const clearRockets = useRef(true);
-  const { rockets, currentPage, hasNextPage, currentAmount, amount, amountFavorites, amountShared } = data || {};
+  const { rockets, currentPage, hasNextPage, currentAmount, rocketsAmount, favoritesAmount, sharedAmount } = data || {};
 
   const handleFilterRockets = ({ target }: React.MouseEvent) => {
     const dataValue = (target as HTMLButtonElement).dataset.filter || '';
@@ -152,20 +152,20 @@ const Profile: React.FC = () => {
             <UserName>{user.name}</UserName>
             <AsideContentActions>
               <AsideContentAction
-                text={`${amount || 0} total`}
+                text={`${rocketsAmount || 0} total`}
                 mode="primary"
                 icon={['fas', 'space-shuttle']}
                 onClick={handleFilterRockets}
               />
               <AsideContentAction
-                text={`${amountFavorites || 0} favorites`}
+                text={`${favoritesAmount || 0} favorites`}
                 mode="primary"
                 icon={['far', 'heart']}
                 data-filter="favorites"
                 onClick={handleFilterRockets}
               />
               <AsideContentAction
-                text={`${amountShared || 0} shared`}
+                text={`${sharedAmount || 0} shared`}
                 mode="primary"
                 icon={['far', 'share-square']}
                 data-filter="shared"
@@ -188,7 +188,7 @@ const Profile: React.FC = () => {
               onClick={() => navigate(userRouts.EDIT_PROFILE)}
             />
             <Button
-              text="Add new rocket"
+              text="Create new place"
               icon={['fas', 'rocket']}
               aria-haspopup="true"
               onClick={() => navigate(userRouts.ADD_ROCKET)}
@@ -199,7 +199,7 @@ const Profile: React.FC = () => {
           <ToolsBar />
           <RocketsStatusBar loaded={appRockets.length} from={currentAmount} />
           <RocketsContentWrapper>
-            <Title tag="h2">{`${urlParams?.filter || 'All'} rockets`}</Title>
+            <Title tag="h2">{`${urlParams?.filter || 'All'} places`}</Title>
             {rocketsContent}
           </RocketsContentWrapper>
         </ProfileSection>

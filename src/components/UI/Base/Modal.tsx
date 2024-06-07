@@ -18,13 +18,13 @@ const ModalBlock = styled.div`
   left: 50%;
   margin: 0;
   max-height: 90%;
-  min-height: 500px;
+  min-height: 300px;
   overflow-y: auto;
   position: fixed;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 50%;
-  z-index: 1000;
+  z-index: 999;
 
   @media (max-width: 1279px) {
     width: 80%;
@@ -87,7 +87,7 @@ const ModalActions = styled.footer`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 20px;
+  margin: 20px 0;
 
   & > *:not(:last-child) {
     margin: 5px;
@@ -107,12 +107,12 @@ const ModalOverlay = forwardRef<HTMLDivElement, ModalProps>(({ actions, title, o
     <ModalBlock ref={ref} aria-modal="true" role="dialog">
       <ModalHeader>
         <ModalTitle>{title}</ModalTitle>
-        <ModalCloseButton text="close" icon={['fas', 'xmark']} onlyIcon onClick={onShowModal} />
+        <ModalCloseButton text="close" title="close" icon={['fas', 'xmark']} onlyIcon onClick={onShowModal} />
       </ModalHeader>
       <ModalContent>{children}</ModalContent>
       {actions && (
         <ModalActions>
-          <Button text="Close" onClick={onShowModal} />
+          <Button text="cancel" title="cancel" onClick={onShowModal} />
           {actions}
         </ModalActions>
       )}

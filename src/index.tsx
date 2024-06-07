@@ -22,6 +22,7 @@ import {
   faRotate,
   faEllipsisVertical,
   faTrash,
+  faStar,
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faHeart,
@@ -33,6 +34,7 @@ import {
   faShareSquare,
   faFaceSadTear,
   faPenToSquare,
+  faClock,
 } from '@fortawesome/free-regular-svg-icons';
 
 import { store } from './store';
@@ -62,7 +64,9 @@ library.add(
   faFaceSadTear,
   faEllipsisVertical,
   faPenToSquare,
-  faTrash
+  faTrash,
+  faStar,
+  faClock
 );
 
 const apolloClient = new ApolloClient({

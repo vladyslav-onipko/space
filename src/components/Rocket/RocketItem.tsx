@@ -80,7 +80,7 @@ const RocketItem: React.FC<RocketItemProps> = ({ rocket }) => {
         </RocketContent>
         <RocketActions>
           <DetailButton text="Detail" mode="secondary" type="router-link" to={detailRocketRout} />
-          <Button text="like" icon={['far', 'heart']} onlyIcon />
+          <Button text="like" icon={['far', 'heart']} title="favorite" onlyIcon />
         </RocketActions>
       </RocketContentWrapper>
     </RocketContainer>
