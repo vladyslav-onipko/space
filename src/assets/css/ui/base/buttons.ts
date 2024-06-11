@@ -1,6 +1,7 @@
 import { css } from 'styled-components';
 
 import { ButtonStylesConfig } from '../../../../models/button';
+import { LinkStylesConfig } from '../../../../models/link';
 
 export const disabledButtonStyles = css`
   &:disabled {
@@ -14,7 +15,7 @@ export const buttonTextStyles = css`
   pointer-events: none;
 `;
 
-export const buttonIconStyles = css<ButtonStylesConfig>`
+export const buttonIconStyles = css<ButtonStylesConfig | LinkStylesConfig>`
   display: inline-block;
   height: ${({ $onlyIcon }) => ($onlyIcon ? '30px' : '18px')};
   margin-left: ${({ $onlyIcon }) => ($onlyIcon ? '0' : '5px')};
@@ -28,7 +29,7 @@ export const buttonIconStyles = css<ButtonStylesConfig>`
   }
 `;
 
-export const defaultButtonStyles = css<ButtonStylesConfig>`
+export const defaultButtonStyles = css<ButtonStylesConfig | LinkStylesConfig>`
   align-items: center;
   background-color: transparent;
   border: 1px solid var(--color-1--3);
@@ -42,6 +43,7 @@ export const defaultButtonStyles = css<ButtonStylesConfig>`
   min-height: 50px;
   min-width: ${({ $onlyIcon }) => ($onlyIcon ? '40px' : '150px')};
   padding: 5px 7px;
+  position: relative;
   text-align: center;
   text-transform: uppercase;
   transition: all 250ms ease-in-out;
@@ -60,6 +62,10 @@ export const defaultButtonStyles = css<ButtonStylesConfig>`
   & svg path {
     transition: all 250ms ease-in-out;
     fill: var(--color-1--3);
+  }
+
+  @media (max-width: 1279px) {
+    font-size: 2rem;
   }
 
   @media (max-width: 767px) {
@@ -108,5 +114,31 @@ export const primaryButtonStyles = css`
 
   & svg path {
     fill: var(--color-1--3);
+  }
+`;
+
+export const favoriteButtonStyles = css`
+  ${defaultButtonStyles};
+  background-color: var(--color-3--1);
+  border-color: var(--color-3--1);
+
+  & svg {
+    animation: heartMove 0.5s ease-in-out;
+
+    path {
+      fill: var(--color-white);
+    }
+  }
+
+  @keyframes heartMove {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 `;

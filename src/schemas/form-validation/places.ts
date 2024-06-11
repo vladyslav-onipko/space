@@ -13,7 +13,7 @@ const fileSizeValidation = (file: any) => {
 };
 
 export const PlaceCreateSchema = object().shape({
-  address: string().min(5, 'Enter a valid place address').required('Field must not be empty'),
+  address: string().required('Field must not be empty'),
   title: string().min(3, 'Title must be at least 3 characters long').required('Field must not be empty'),
   image: mixed()
     .test('fileFormat', 'Only .jpg, .png, .jpeg are allowed', fileFormatValidation)

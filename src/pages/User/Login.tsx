@@ -10,8 +10,8 @@ import Form from '../../components/UI/Form/Form';
 import Input from '../../components/UI/Form/Elements/Input';
 import Button from '../../components/UI/Base/Button';
 
-import useAppDispatch from '../../hooks/app-dispatch';
-import usePasswordVisibility from '../../hooks/password-visibility';
+import useAppDispatch from '../../hooks/app/app-dispatch';
+import usePasswordVisibility from '../../hooks/form/password-visibility';
 
 import { userRouts } from '../../router/routs';
 import shuttleImage from '../../assets/img/shuttle.jpg';

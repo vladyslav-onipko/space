@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useParams, useNavigate, Outlet } from 'react-router-dom';
+import { useParams, useNavigate, Outlet, Link as RouterLink } from 'react-router-dom';
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { styled } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -16,23 +16,40 @@ import Map from '../../components/UI/Base/Map';
 import Modal from '../../components/UI/Base/Modal';
 import Link from '../../components/UI/Base/Link';
 
-import useAppSelector from '../../hooks/app-selector';
-import useAppDispatch from '../../hooks/app-dispatch';
-import { getPlace, editPlace, deletePlace } from '../../utils/http/places';
+import useAppSelector from '../../hooks/app/app-selector';
+import { getPlace } from '../../utils/http/places';
 import { placeRouts } from '../../router/routs';
-import { showNotification } from '../../store/notification/notification-slice';
-import { userRouts } from '../../router/routs';
-import { ResponseEditPlaceData } from '../../models/places';
+import { useSharePlace } from '../../hooks/http/share-place-query';
+import { useDeletePlace } from '../../hooks/http/delete-place-query';
 
 const PlaceWrapper = styled.div`
   display: flex;
-  flex-wrap: wrap;
+
+  @media (max-width: 767px) {
+    align-items: center;
+    flex-direction: column;
+  }
 `;
 
 const PlacePicture = styled.picture`
   border-radius: 10px;
+  flex-shrink: 0;
   overflow: hidden;
   width: 50%;
+
+  @media (max-width: 1279px) {
+    width: 40%;
+  }
+
+  @media (max-width: 767px) {
+    margin-bottom: 50px;
+    width: 60%;
+  }
+
+  @media (max-width: 479px) {
+    margin-bottom: 25px;
+    width: 100%;
+  }
 `;
 
 const PlaceContent = styled.article`
@@ -40,12 +57,29 @@ const PlaceContent = styled.article`
   min-height: 700px;
   overflow: auto;
   padding: 0 50px;
-  width: 50%;
+  width: 100%;
+
+  @media (max-width: 1279px) {
+    height: 500px;
+    min-height: 500px;
+    padding: 0 15px;
+  }
+
+  @media (max-width: 767px) {
+    height: 100%;
+    min-height: 100%;
+  }
 `;
 
 const PlaceContentWrapper = styled.div`
   &:not(:last-child) {
     margin-bottom: 40px;
+  }
+
+  @media (max-width: 1279px) {
+    &:not(:last-child) {
+      margin-bottom: 20px;
+    }
   }
 `;
 
@@ -63,6 +97,7 @@ const PlaceContentTags = styled.div`
   align-items: flex-start;
   display: flex;
   flex-wrap: wrap;
+  height: 100%;
 `;
 
 const PlaceContentTag = styled.p`
@@ -73,9 +108,14 @@ const PlaceContentTag = styled.p`
   display: flex;
   font-size: 2.2rem;
   font-weight: 700;
-  margin: 0 5px;
+  margin: 3px 5px;
   padding: 5px 15px;
   width: fit-content;
+
+  @media (max-width: 1279px) {
+    font-size: 1.6rem;
+    padding: 5px 10px;
+  }
 `;
 
 const PlaceHeader = styled.header`
@@ -83,6 +123,15 @@ const PlaceHeader = styled.header`
   display: flex;
   margin-bottom: 40px;
   position: relative;
+
+  @media (max-width: 1279px) {
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 479px) {
+    flex-direction: column-reverse;
+    padding: 50px 0 0;
+  }
 `;
 
 const PlaceHeaderTag = styled.span<{ $isShared: boolean }>`
@@ -91,12 +140,30 @@ const PlaceHeaderTag = styled.span<{ $isShared: boolean }>`
   color: var(--color-white);
   margin: 0 25px;
   padding: 5px 15px;
+
+  @media (max-width: 1279px) {
+    font-size: 1.6rem;
+    margin: 0 20px;
+    padding: 5px 10px;
+  }
+
+  @media (max-width: 479px) {
+    left: 0;
+    margin: 0;
+    position: absolute;
+    top: 0;
+  }
 `;
 
-const PlaceTitle = styled.h3`
+const PlaceHeaderTitle = styled.h3`
   color: var(--color-1--3);
-  font-size: 4.5rem;
+  font-size: 4rem;
   line-height: 1;
+  word-break: break-all;
+
+  @media (max-width: 1279px) {
+    font-size: 2.5rem;
+  }
 `;
 
 const PlaceDescription = styled(PlaceContentWrapper)`
@@ -109,6 +176,10 @@ const PlaceContentTitle = styled.h4`
   color: var(--color-1--3);
   font-size: 2.2rem;
   margin-bottom: 20px;
+
+  @media (max-width: 1279px) {
+    font-size: 1.8rem;
+  }
 `;
 
 const PlaceAuthorContent = styled.div`
@@ -118,6 +189,7 @@ const PlaceAuthorContent = styled.div`
 const PlaceAuthorPicture = styled.picture`
   border-radius: 10px;
   display: block;
+  flex-shrink: 0;
   height: 150px;
   margin-right: 20px;
   overflow: hidden;
@@ -135,61 +207,73 @@ const ModalContentText = styled.p`
   text-align: center;
 `;
 
+const TopPlacesList = styled.ul`
+  display: flex;
+  margin: 0 -5px;
+
+  @media (max-width: 479px) {
+    flex-wrap: wrap;
+  }
+`;
+
+const TopPlaceItem = styled.li`
+  margin-bottom: 5px;
+  padding: 0 5px;
+  width: calc(100% / 3);
+
+  @media (max-width: 479px) {
+    width: calc(100% / 2);
+  }
+`;
+
+const TopPlaceLink = styled(RouterLink)`
+  border-radius: 10px;
+  display: block;
+  overflow: hidden;
+  transition: all 250ms ease-in-out;
+
+  &:hover,
+  &:focus {
+    box-shadow: 0px 0px 20px 0px rgba(249, 177, 122, 1);
+  }
+`;
+
+const TopPlacePicture = styled.picture`
+  display: block;
+  height: 150px;
+`;
+
+const UserTopPlacesList: React.FC<{ items: { title: string; image: string; id: string }[] }> = ({ items }) => {
+  return (
+    <TopPlacesList>
+      {items.map((item) => (
+        <TopPlaceItem key={item.id}>
+          <TopPlaceLink title={item.title} to={placeRouts.DETAIL_PLACE.replace(':id', item.id)}>
+            <TopPlacePicture>
+              <img src={`${process.env.REACT_APP_BACKEND_URL}/${item.image}`} alt={item.title} />
+            </TopPlacePicture>
+          </TopPlaceLink>
+        </TopPlaceItem>
+      ))}
+    </TopPlacesList>
+  );
+};
+
 const PlaceDetail: React.FC = () => {
   const [showRemovePlaceModal, setShowRemovePlaceModal] = useState(false);
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const dispatch = useAppDispatch();
   const { user, token } = useAppSelector((state) => state.auth);
   const { id: placeId } = useParams();
 
-  const queryKey = ['places', placeId];
-  const profileRoute = userRouts.PROFILE.replace(':id', user.id);
-
   const { data, isSuccess, isPending, isError, error } = useQuery({
-    queryKey,
+    queryKey: ['places', placeId, 'detail'],
     queryFn: ({ signal }) => getPlace({ signal, placeId: placeId! }),
   });
 
-  // need to rewrite to the custom hook
-  const { mutate: sharePlace } = useMutation({
-    mutationFn: editPlace,
-    onMutate: async ({ shared }) => {
-      await queryClient.cancelQueries({ queryKey });
-
-      const { place: oldPlace }: ResponseEditPlaceData = queryClient.getQueryData(queryKey)!;
-      const updatedPlace = { place: { ...oldPlace, shared } };
-
-      queryClient.setQueryData(queryKey, updatedPlace);
-
-      return { oldPlace };
-    },
-    onSuccess(data) {
-      dispatch(showNotification({ message: data!.message, status: 'success' }));
-    },
-    onError(error, _, context) {
-      queryClient.setQueryData(queryKey, { place: context?.oldPlace });
-      dispatch(showNotification({ message: error.message, status: 'error' }));
-    },
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey });
-    },
-  });
-
-  const { mutate: removePlace, isPending: isRemoving } = useMutation({
-    mutationFn: deletePlace,
-    onSuccess(data) {
-      queryClient.invalidateQueries({ queryKey });
-      dispatch(showNotification({ message: data.message, status: 'success' }));
-      navigate(profileRoute, { replace: true });
-    },
-    onError(error) {
-      dispatch(showNotification({ message: error.message, status: 'error' }));
-    },
-  });
+  const { mutate: sharePlace } = useSharePlace(placeId);
+  const { mutate: removePlace, isPending: isRemoving } = useDeletePlace(placeId);
 
   const isAuthorized = user.id === data?.place.creator.id;
-  console.log(data);
 
   const handleSharePlace = () => {
     sharePlace({
@@ -231,7 +315,7 @@ const PlaceDetail: React.FC = () => {
         </PlacePicture>
         <PlaceContent>
           <PlaceHeader>
-            <PlaceTitle>{data.place.title}</PlaceTitle>
+            <PlaceHeaderTitle>{data.place.title}</PlaceHeaderTitle>
             {isAuthorized && (
               <PlaceHeaderTag $isShared={data.place.shared}>
                 {data.place.shared ? 'shared' : 'not shared'}
@@ -267,6 +351,10 @@ const PlaceDetail: React.FC = () => {
               </DropdownButton>
             )}
           </PlaceHeader>
+          <PlaceContentWrapper>
+            <PlaceContentTitle>Top places</PlaceContentTitle>
+            <UserTopPlacesList items={data.topUserPlaces} />
+          </PlaceContentWrapper>
           <PlaceDescription>
             <PlaceContentTitle>Overview</PlaceContentTitle>
             <PlaceContentText>{data.place.description}</PlaceContentText>
@@ -323,7 +411,7 @@ const PlaceDetail: React.FC = () => {
             </PlaceContentTags>
           </PlaceContentWrapper>
           <PlaceContentWrapper>
-            <Link text="see all user places" type="router-link" to="/" />
+            <Link text={`see all ${data.place.creator.name}'s places`} type="router-link" to="/" />
           </PlaceContentWrapper>
         </PlaceContent>
       </PlaceWrapper>

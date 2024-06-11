@@ -9,8 +9,8 @@ import Input from '../UI/Form/Elements/Input';
 import ImagePicker from '../../components/UI/Form/Elements/ImagePicker';
 import Button from '../../components/UI/Base/Button';
 
-import useAppSelector from '../../hooks/app-selector';
-import useAppDispatch from '../../hooks/app-dispatch';
+import useAppSelector from '../../hooks/app/app-selector';
+import useAppDispatch from '../../hooks/app/app-dispatch';
 
 import { ProfileEditSchema } from '../../schemas/form-validation/user';
 import { ProfileEditInputValues } from '../../models/user';

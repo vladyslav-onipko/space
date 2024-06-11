@@ -1,12 +1,11 @@
 import { ComponentPropsWithoutRef } from 'react';
 
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { LinkModeConfig } from './link';
 
-export type ButtonModeConfig = 'default' | 'secondary' | 'primary';
+export type ButtonModeConfig = 'default' | 'secondary' | 'primary' | 'favorite';
 
 export interface ButtonStylesConfig {
-  $mode?: ButtonModeConfig | LinkModeConfig;
+  $mode?: ButtonModeConfig;
   $onlyIcon?: boolean;
 }
 

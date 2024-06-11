@@ -19,9 +19,9 @@ const Map: React.FC<MapProps> = ({ center, zoom, markerTitle, ...props }) => {
 
   useEffect(() => {
     const addGoogleMap = async () => {
-      const { AdvancedMarkerElement } = (await google.maps.importLibrary('marker')) as google.maps.MarkerLibrary;
+      const { AdvancedMarkerElement } = (await window.google.maps.importLibrary('marker')) as google.maps.MarkerLibrary;
 
-      const map = new google.maps.Map(mapRef.current!, {
+      const map = new window.google.maps.Map(mapRef.current!, {
         center,
         zoom: zoom || 16,
         mapId: process.env.REACT_APP_GOOGLE_MAP_ID,

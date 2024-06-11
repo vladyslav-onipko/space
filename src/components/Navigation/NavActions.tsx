@@ -2,8 +2,8 @@ import Link from '../../components/UI/Base/Link';
 import Button from '../../components/UI/Base/Button';
 import ProfileLink from '../User/ProfileLink';
 
-import useAppSelector from '../../hooks/app-selector';
-import useAppDispatch from '../../hooks/app-dispatch';
+import useAppSelector from '../../hooks/app/app-selector';
+import useAppDispatch from '../../hooks/app/app-dispatch';
 import { logout } from '../../store/user/auth/auth-actions';
 import { userRouts } from '../../router/routs';
 

@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom';
 
 import { styled } from 'styled-components';
 
-import useAppDispatch from '../../../hooks/app-dispatch';
-import useAppSelector from '../../../hooks/app-selector';
+import useAppDispatch from '../../../hooks/app/app-dispatch';
+import useAppSelector from '../../../hooks/app/app-selector';
 
 import { CSSTransition } from 'react-transition-group';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Formik, FormikHelpers, FormikProps } from 'formik';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import Form from '../UI/Form/Form';
 import Modal from '../UI/Base/Modal';
@@ -13,22 +13,16 @@ import ErrorBlock from '../UI/Helpers/ErrorBlock';
 import Spinner from '../UI/Helpers/Spinner';
 import ContentWrapper from '../UI/Helpers/ContentWrapper';
 
-import useAppSelector from '../../hooks/app-selector';
-import useAppDispatch from '../../hooks/app-dispatch';
-
+import useAppSelector from '../../hooks/app/app-selector';
 import { PlaceEditSchema } from '../../schemas/form-validation/places';
-import { PlaceEditInputValues, ResponseEditPlaceData } from '../../models/places';
+import { PlaceEditInputValues } from '../../models/places';
 import { getPlace } from '../../utils/http/places';
-import { editPlace } from '../../utils/http/places';
-import { showNotification } from '../../store/notification/notification-slice';
-import { ServerInputError, ResponseError } from '../../models/http-error';
+import { useEditPlace } from '../../hooks/http/edit-place-query';
 
 const PlaceEditModal: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
   const { token } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const { id: placeId } = useParams();
 
   const queryKey = ['places', placeId];
@@ -38,35 +32,7 @@ const PlaceEditModal: React.FC = () => {
     queryFn: ({ signal }) => getPlace({ signal, placeId: placeId! }),
   });
 
-  // need to rewrite to the custom hook
-  const { mutate } = useMutation({
-    mutationFn: editPlace,
-    onMutate: async ({ placeData }) => {
-      await queryClient.cancelQueries({ queryKey });
-
-      const { place: oldPlace }: ResponseEditPlaceData = queryClient.getQueryData(queryKey)!;
-      const updatedPlace = { place: { ...oldPlace, ...placeData } };
-
-      queryClient.setQueryData(queryKey, updatedPlace);
-      navigate(-1);
-
-      return { oldPlace };
-    },
-    onSuccess(data) {
-      dispatch(showNotification({ message: data!.message, status: 'success' }));
-    },
-    onError(error: ResponseError, data, context) {
-      queryClient.setQueryData(queryKey, { place: context?.oldPlace });
-      dispatch(showNotification({ message: error.message, status: 'error' }));
-
-      if (error.errors && error.errors.length) {
-        error.errors.forEach((error: ServerInputError) => data.setFieldError!(error.field, error.message));
-      }
-    },
-    onSettled() {
-      queryClient.invalidateQueries({ queryKey });
-    },
-  });
+  const { mutate } = useEditPlace(placeId);
 
   let modalContent;
 

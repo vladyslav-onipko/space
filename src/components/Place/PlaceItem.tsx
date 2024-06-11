@@ -1,13 +1,15 @@
+import { useEffect, useMemo, useState } from 'react';
+
 import { styled } from 'styled-components';
-import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 import Button from '../UI/Base/Button';
 import Link from '../UI/Base/Link';
 
-import useAppSelector from '../../hooks/app-selector';
-import { PlaceItemProps } from '../../models/places';
+import useAppSelector from '../../hooks/app/app-selector';
+import { PlaceItemProps, Place } from '../../models/places';
 import { placeRouts } from '../../router/routs';
-import { likePlace } from '../../utils/http/places';
+import { useLikePlace } from '../../hooks/http/like-place-query';
 
 const PlaceContainer = styled.article`
   border: 1px solid var(--color-1--2);
@@ -69,22 +71,33 @@ const DetailButton = styled(Link)`
 `;
 
 const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
+  const [isFavorite, setIsFavorite] = useState<boolean | null>(null);
   const user = useAppSelector((state) => state.auth.user);
+  const queryClient = useQueryClient();
 
-  const { mutate } = useMutation({
-    mutationFn: likePlace,
-    onMutate: async () => {}, // need to implement like functionality
-    onError(error) {
-      console.log(error);
-    },
-  });
+  const { id: placeId } = place;
 
-  const handleLikePlace = () => {
-    console.log(place.favorite);
-    mutate({ placeId: place.id, userId: user.id, userLike: !place.favorite });
+  const detailPlaceRout = placeRouts.DETAIL_PLACE.replace(':id', placeId);
+  const queryKey = useMemo(() => ['places', placeId], [placeId]);
+
+  const { mutate: likePlace } = useLikePlace(queryKey);
+
+  const handleLikePlace = ({ target }: React.MouseEvent<HTMLButtonElement>) => {
+    likePlace({ placeId, userId: user.id, userLike: !isFavorite, onSetIsFavorite: setIsFavorite });
+    (target as HTMLButtonElement).blur();
   };
 
-  const detailPlaceRout = placeRouts.DETAIL_PLACE.replace(':id', place.id);
+  useEffect(() => {
+    const setQueryData = async () => {
+      await queryClient.cancelQueries({ queryKey });
+      const oldPlace: Place = queryClient.getQueryData(queryKey) || place;
+
+      queryClient.setQueryData(queryKey, oldPlace);
+      setIsFavorite(oldPlace.favorite);
+    };
+
+    setQueryData();
+  }, [place, queryClient, queryKey]);
 
   return (
     <PlaceContainer>
@@ -98,7 +111,14 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
         </PlaceContent>
         <PlaceActions>
           <DetailButton text="Detail" mode="secondary" type="router-link" to={detailPlaceRout} />
-          <Button text="like" icon={['far', 'heart']} title="favorite" onlyIcon onClick={handleLikePlace} />
+          <Button
+            text="like"
+            icon={['far', 'heart']}
+            title="favorite"
+            mode={isFavorite ? 'favorite' : 'default'}
+            onlyIcon
+            onClick={handleLikePlace}
+          />
         </PlaceActions>
       </PlaceContentWrapper>
     </PlaceContainer>

@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
-import useAppDispatch from '../../hooks/app-dispatch';
+import useAppDispatch from '../../hooks/app/app-dispatch';
 
 import { sortPlaces } from '../../store/places/places-slice';
 

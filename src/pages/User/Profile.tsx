@@ -17,8 +17,8 @@ import PlacesStatusBar from '../../components/Place/PlacesStatusBar';
 import PlacesList from '../../components/Place/PlacesList';
 import Title from '../../components/UI/Base/Title';
 
-import useAppSelector from '../../hooks/app-selector';
-import useAppDispatch from '../../hooks/app-dispatch';
+import useAppSelector from '../../hooks/app/app-selector';
+import useAppDispatch from '../../hooks/app/app-dispatch';
 
 import { userRouts } from '../../router/routs';
 import { getUserProfile } from '../../utils/http/user';
@@ -28,9 +28,15 @@ import { setPlaces } from '../../store/places/places-slice';
 const ProfileContentContainer = styled(Container)`
   display: flex;
   justify-content: center;
+  margin-bottom: 100px;
 
   @media (max-width: 1279px) {
     flex-wrap: wrap;
+    margin-bottom: 80px;
+  }
+
+  @media (max-width: 767px) {
+    margin-bottom: 60px;
   }
 `;
 const ProfileSection = styled(Section)`
@@ -116,7 +122,7 @@ const Profile: React.FC = () => {
     const dataValue = (target as HTMLButtonElement).dataset.filter || '';
     setUrlParams({ filter: dataValue, page: 1, search: '' });
   };
-  console.log(places);
+
   const handleLoadMorePlaces = () => {
     setUrlParams({ page: (currentPage || 1) + 1 });
     clearPlaces.current = false;

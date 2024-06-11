@@ -11,8 +11,8 @@ import FormWrapper from '../../components/UI/Form/FormWrapper';
 import ImagePicker from '../../components/UI/Form/Elements/ImagePicker';
 import Link from '../../components/UI/Base/Link';
 
-import useAppDispatch from '../../hooks/app-dispatch';
-import usePasswordVisibility from '../../hooks/password-visibility';
+import useAppDispatch from '../../hooks/app/app-dispatch';
+import usePasswordVisibility from '../../hooks/form/password-visibility';
 
 import spacexImage from '../../assets/img/spacex.jpg';
 import { SignupSchema } from '../../schemas/form-validation/user';

@@ -12,6 +12,12 @@ import { ButtonProps } from '../../../models/button';
 const DropdownContainer = styled.div`
   position: relative;
   margin-left: auto;
+
+  @media (max-width: 479px) {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
 `;
 
 const DropdownBlock = styled.div`
@@ -74,13 +80,31 @@ const DropdownBlock = styled.div`
     height: 0;
     position: absolute;
     bottom: 100%;
+    border-bottom: 10px solid var(--color-2--1);
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid var(--color-2--1);
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     z-index: 1;
+
+    @media (max-width: 1279px) {
+      bottom: auto;
+      border-bottom: 10px solid transparent;
+      border-left: 10px solid var(--color-2--1);
+      border-right: none;
+      border-top: 10px solid transparent;
+      left: 100%;
+      transform: none;
+    }
+  }
+
+  @media (max-width: 1279px) {
+    left: auto;
+    margin: 0 10px 0 0;
+    right: 100%;
+    top: 10px;
+    transform: none;
   }
 `;
 

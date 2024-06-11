@@ -1,6 +1,6 @@
 import { Outlet, Navigate } from 'react-router-dom';
 
-import useAppSelector from '../../../hooks/app-selector';
+import useAppSelector from '../../../hooks/app/app-selector';
 
 import { baseRouts, userRouts } from '../../../router/routs';
 

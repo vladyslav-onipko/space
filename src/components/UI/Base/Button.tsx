@@ -9,6 +9,7 @@ import {
   disabledButtonStyles,
   buttonTextStyles,
   buttonIconStyles,
+  favoriteButtonStyles,
 } from '../../../assets/css/ui/base/buttons';
 
 import { ButtonProps, ButtonStylesConfig } from '../../../models/button';
@@ -29,6 +30,7 @@ const ButtonEl = styled.button<ButtonStylesConfig>`
   ${({ $mode }) => ($mode === 'default' ? defaultButtonStyles : null)};
   ${({ $mode }) => ($mode === 'secondary' ? secondaryButtonStyles : null)};
   ${({ $mode }) => ($mode === 'primary' ? primaryButtonStyles : null)};
+  ${({ $mode }) => ($mode === 'favorite' ? favoriteButtonStyles : null)};
   ${disabledButtonStyles};
 `;
 

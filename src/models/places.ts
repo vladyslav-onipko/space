@@ -48,6 +48,7 @@ export interface ResponseGetPlaceData {
   place: Place;
   userPlacesAmount: number;
   userRating: number;
+  topUserPlaces: { title: string; image: string; id: string }[];
 }
 
 // Edit place reques/response data
@@ -93,6 +94,7 @@ export interface RequestLikePlaceData {
   placeId: string;
   userLike: boolean;
   userId: string;
+  onSetIsFavorite: (favorite: boolean | null) => void;
 }
 
 // Delete place reques/response data

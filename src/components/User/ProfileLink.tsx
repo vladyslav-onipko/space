@@ -2,7 +2,7 @@ import { styled } from 'styled-components';
 
 import Link from '../UI/Base/Link';
 
-import useAppSelector from '../../hooks/app-selector';
+import useAppSelector from '../../hooks/app/app-selector';
 
 import { userRouts } from '../../router/routs';
 
