@@ -1,10 +1,15 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
 import Header from './Header';
 import Footer from './Footer';
+import HeroImage from '../components/Hero/HeroImage';
+import HeroSlider from '../components/Hero/HeroSlider';
+
 import Notification from '../components/UI/Helpers/Notification';
+import { baseRouts } from '../router/routs';
+import quotes from '../utils/helpers/quotes';
 
 const SiteWrapper = styled.div`
   height: 100%;
@@ -37,6 +42,12 @@ const SiteWrapperFooter = styled.div`
 `;
 
 const Root: React.FC = () => {
+  const location = useLocation();
+  const randomNumber = Math.floor(Math.random() * (quotes.length - 1 - 1 + 1)) + 1;
+  console.log(randomNumber);
+  const pageContentTop =
+    location.pathname === baseRouts.HOME ? <HeroSlider /> : <HeroImage title={quotes[randomNumber].text} />;
+
   return (
     <SiteWrapper>
       <SiteWrapperHeader>
@@ -44,6 +55,7 @@ const Root: React.FC = () => {
       </SiteWrapperHeader>
       <SiteWrapperMain>
         <main role="main">
+          {pageContentTop}
           <Outlet />
           <Notification />
         </main>

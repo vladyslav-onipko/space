@@ -1,17 +1,19 @@
+import { memo, useRef } from 'react';
+
 import { styled } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y, Autoplay } from 'swiper/modules';
-import { useRef } from 'react';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
 
+import { pointerAnimation } from '../../assets/css/helpers/animations';
+
 import Section from '../UI/Base/Section';
 import Button from '../UI/Base/Button';
 
-import { images } from '../../utils/helpers/images';
-import { pointerAnimation } from '../../assets/css/helpers/animations';
+import images from '../../utils/helpers/slider-images';
 
 const HeroSwiper = styled(Swiper)`
   & .swiper-pagination {
@@ -181,6 +183,7 @@ const ButtonAnchor = styled(Button)`
 
 const HeroSlider: React.FC = () => {
   const heroRef = useRef<HTMLElement>(null);
+
   const scrollDown = () => {
     window.scrollTo(0, heroRef.current!.scrollHeight);
   };
@@ -196,7 +199,10 @@ const HeroSlider: React.FC = () => {
         {images.map((img) => (
           <SwiperSlide key={img.alt}>
             <HeroPicture>
-              <HeroImage src={img.path} alt={img.alt} />
+              <source srcSet={img.sourceMobileSm} media="(max-width: 479px)" />
+              <source srcSet={img.sourceMobile} media="(max-width: 767px)" />
+              <source srcSet={img.sourceTablet} media="(max-width: 1279px)" />
+              <HeroImage src={img.path} alt={img.alt} height="740" width="1920" />
             </HeroPicture>
           </SwiperSlide>
         ))}
@@ -205,4 +211,4 @@ const HeroSlider: React.FC = () => {
   );
 };
 
-export default HeroSlider;
+export default memo(HeroSlider);

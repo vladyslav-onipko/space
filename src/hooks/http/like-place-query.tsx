@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { likePlace } from '../../utils/http/places';
-import { Place } from '../../models/places';
+import { likePlace } from '../../utils/http/place';
+import { Place } from '../../models/place';
 
 export const useLikePlace = (queryKey: (string | number | boolean | null)[]) => {
   const queryClient = useQueryClient();
@@ -24,7 +24,7 @@ export const useLikePlace = (queryKey: (string | number | boolean | null)[]) => 
       context?.onSetIsFavorite(context.oldPlace.favorite);
     },
     onSettled() {
-      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey, exact: true });
     },
   });
 

@@ -11,8 +11,8 @@ import ImagePicker from '../UI/Form/Elements/ImagePicker';
 import Checkbox from '../UI/Form/Elements/Checkbox';
 
 import useAppSelector from '../../hooks/app/app-selector';
-import { PlaceCreateInputValues } from '../../models/places';
-import { PlaceCreateSchema } from '../../schemas/form-validation/places';
+import { PlaceCreateInputValues } from '../../models/place';
+import { PlaceCreateSchema } from '../../schemas/form-validation/place';
 import { useCreatePlace } from '../../hooks/http/create-place-query';
 
 const PlaceCreateModal: React.FC = () => {

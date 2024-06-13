@@ -1,6 +1,8 @@
-import { ComponentPropsWithoutRef } from 'react';
+import { ComponentPropsWithoutRef, useRef, useState, useEffect } from 'react';
 
 import { styled } from 'styled-components';
+
+import generateWords from '../../../utils/helpers/generate-words';
 
 const FormContainer = styled.div`
   border-radius: 10px;
@@ -92,9 +94,17 @@ interface FormWrapperProps extends ComponentPropsWithoutRef<'div'> {
 }
 
 const FormWrapper: React.FC<FormWrapperProps> = ({ image, children, title, ...props }) => {
+  const [pictureSize, setPictureSize] = useState<{ height: number; width: number }>({ height: 700, width: 580 });
+  const pictureRef = useRef<HTMLPictureElement | null>(null);
+
+  useEffect(() => {
+    const { height, width } = pictureRef.current?.getBoundingClientRect()!;
+    setPictureSize({ height, width });
+  }, []);
+
   const Picture = image ? (
-    <FormPicture>
-      <img src={image} alt="" />
+    <FormPicture ref={pictureRef}>
+      <img src={image} alt={generateWords(3)} height={pictureSize.height} width={pictureSize.width} />
     </FormPicture>
   ) : null;
 

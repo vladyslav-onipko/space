@@ -8,7 +8,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Loader from '../../components/UI/Helpers/Loader';
 import Section from '../../components/UI/Base/Section';
 import Container from '../../components/UI/Base/Container';
-import HeroImage from '../../components/Hero/HeroImage';
 import ErrorBlock from '../../components/UI/Helpers/ErrorBlock';
 import DropdownButton from '../../components/UI/Base/DropdownButton';
 import Button from '../../components/UI/Base/Button';
@@ -17,7 +16,7 @@ import Modal from '../../components/UI/Base/Modal';
 import Link from '../../components/UI/Base/Link';
 
 import useAppSelector from '../../hooks/app/app-selector';
-import { getPlace } from '../../utils/http/places';
+import { getPlace } from '../../utils/http/place';
 import { placeRouts } from '../../router/routs';
 import { useSharePlace } from '../../hooks/http/share-place-query';
 import { useDeletePlace } from '../../hooks/http/delete-place-query';
@@ -250,7 +249,12 @@ const UserTopPlacesList: React.FC<{ items: { title: string; image: string; id: s
         <TopPlaceItem key={item.id}>
           <TopPlaceLink title={item.title} to={placeRouts.DETAIL_PLACE.replace(':id', item.id)}>
             <TopPlacePicture>
-              <img src={`${process.env.REACT_APP_BACKEND_URL}/${item.image}`} alt={item.title} />
+              <img
+                src={`${process.env.REACT_APP_BACKEND_URL}/${item.image}`}
+                alt={item.title}
+                height="150"
+                width="220"
+              />
             </TopPlacePicture>
           </TopPlaceLink>
         </TopPlaceItem>
@@ -262,18 +266,20 @@ const UserTopPlacesList: React.FC<{ items: { title: string; image: string; id: s
 const PlaceDetail: React.FC = () => {
   const [showRemovePlaceModal, setShowRemovePlaceModal] = useState(false);
   const navigate = useNavigate();
-  const { user, token } = useAppSelector((state) => state.auth);
+  const { isAuth, user, token } = useAppSelector((state) => state.auth);
   const { id: placeId } = useParams();
 
+  const editPlaceQueryKey = ['places', placeId!];
+
   const { data, isSuccess, isPending, isError, error } = useQuery({
-    queryKey: ['places', placeId, 'detail'],
+    queryKey: editPlaceQueryKey,
     queryFn: ({ signal }) => getPlace({ signal, placeId: placeId! }),
   });
 
-  const { mutate: sharePlace } = useSharePlace(placeId);
+  const { mutate: sharePlace } = useSharePlace(editPlaceQueryKey);
   const { mutate: removePlace, isPending: isRemoving } = useDeletePlace(placeId);
 
-  const isAuthorized = user.id === data?.place.creator.id;
+  const isAuthorized = isAuth && user.id === data?.place.creator.id;
 
   const handleSharePlace = () => {
     sharePlace({
@@ -311,7 +317,12 @@ const PlaceDetail: React.FC = () => {
     content = (
       <PlaceWrapper>
         <PlacePicture>
-          <img src={`${process.env.REACT_APP_BACKEND_URL}/${data.place.image}`} alt={data.place.title} />
+          <img
+            src={`${process.env.REACT_APP_BACKEND_URL}/${data.place.image}`}
+            alt={data.place.title}
+            height="700"
+            width="780"
+          />
         </PlacePicture>
         <PlaceContent>
           <PlaceHeader>
@@ -351,10 +362,12 @@ const PlaceDetail: React.FC = () => {
               </DropdownButton>
             )}
           </PlaceHeader>
-          <PlaceContentWrapper>
-            <PlaceContentTitle>Top places</PlaceContentTitle>
-            <UserTopPlacesList items={data.topUserPlaces} />
-          </PlaceContentWrapper>
+          {data.topUserPlaces.length > 0 && (
+            <PlaceContentWrapper>
+              <PlaceContentTitle>Top places</PlaceContentTitle>
+              <UserTopPlacesList items={data.topUserPlaces} />
+            </PlaceContentWrapper>
+          )}
           <PlaceDescription>
             <PlaceContentTitle>Overview</PlaceContentTitle>
             <PlaceContentText>{data.place.description}</PlaceContentText>
@@ -363,7 +376,12 @@ const PlaceDetail: React.FC = () => {
             <PlaceContentTitle>Author</PlaceContentTitle>
             <PlaceAuthorContent>
               <PlaceAuthorPicture>
-                <img src={`${process.env.REACT_APP_BACKEND_URL}/${data.place.creator.image}`} alt="Place author" />
+                <img
+                  src={`${process.env.REACT_APP_BACKEND_URL}/${data.place.creator.image}`}
+                  alt="Place author"
+                  height="150"
+                  width="140"
+                />
               </PlaceAuthorPicture>
               <PlaceContentTags>
                 <PlaceContentTag>
@@ -420,7 +438,6 @@ const PlaceDetail: React.FC = () => {
 
   return (
     <>
-      <HeroImage title="Place detail" />
       <Section hiddenTitle="Place detail">
         <Container size="lg">{content}</Container>
       </Section>
@@ -439,7 +456,7 @@ const PlaceDetail: React.FC = () => {
             />
           }
         >
-          <ModalContentText>Are you sure you want to remove the place ?</ModalContentText>
+          <ModalContentText>Are you sure you want to delete the place ?</ModalContentText>
         </Modal>
       )}
     </>

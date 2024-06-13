@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { useQuery } from '@tanstack/react-query';
 
-import HeroImage from '../../components/Hero/HeroImage';
 import Container from '../../components/UI/Base/Container';
 import Aside from '../../components/UI/Base/Aside';
 import Button from '../../components/UI/Base/Button';
@@ -23,7 +22,7 @@ import useAppDispatch from '../../hooks/app/app-dispatch';
 import { userRouts } from '../../router/routs';
 import { getUserProfile } from '../../utils/http/user';
 import { UrlParamsContext } from '../../store/http/url-params-context';
-import { setPlaces } from '../../store/places/places-slice';
+import { setPlaces } from '../../store/place/place-slice';
 
 const ProfileContentContainer = styled(Container)`
   display: flex;
@@ -149,12 +148,16 @@ const Profile: React.FC = () => {
 
   return (
     <>
-      <HeroImage title="Profile" />
       <ProfileContentContainer size="lg">
         <Aside>
           <AsideContent>
             <UserPicture>
-              <img src={`${process.env.REACT_APP_BACKEND_URL}/${user.image}`} alt={user.name} />
+              <img
+                src={`${process.env.REACT_APP_BACKEND_URL}/${user.image}`}
+                alt={user.name}
+                height="244"
+                width="244"
+              />
             </UserPicture>
             <UserName>{user.name}</UserName>
             <AsideContentActions>

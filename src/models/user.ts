@@ -1,4 +1,4 @@
-import { Place } from './places';
+import { Place } from './place';
 
 // Full user data
 export type User = {

@@ -5,7 +5,7 @@ import { styled } from 'styled-components';
 
 import useAppDispatch from '../../hooks/app/app-dispatch';
 
-import { sortPlaces } from '../../store/places/places-slice';
+import { sortPlaces } from '../../store/place/place-slice';
 
 const SortButtonsWrapper = styled.div`
   background-color: var(--color-1--1);
@@ -39,7 +39,7 @@ const SortButton = styled.button`
   }
 `;
 
-export const DEFAULT_SORT_PARAM_VALUE = 'date';
+export const DEFAULT_SORT_PARAM_VALUE = 'createdAt';
 export const SORT_PARAM_KEY = 'sort';
 
 const SortBar: React.FC = () => {
@@ -64,16 +64,16 @@ const SortBar: React.FC = () => {
   return (
     <SortButtonsWrapper>
       <SortButton
-        data-sort="date"
+        data-sort="createdAt"
         onClick={handleAddSortParam}
-        style={{ backgroundColor: buttonActive.date ? '#2d3250' : '' }}
+        style={{ backgroundColor: buttonActive.createdAt ? '#2d3250' : '' }}
       >
         Date
       </SortButton>
       <SortButton
-        data-sort="rating"
+        data-sort="likes"
         onClick={handleAddSortParam}
-        style={{ backgroundColor: buttonActive.rating ? '#2d3250' : '' }}
+        style={{ backgroundColor: buttonActive.likes ? '#2d3250' : '' }}
       >
         Rating
       </SortButton>

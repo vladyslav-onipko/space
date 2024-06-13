@@ -15,6 +15,7 @@ export interface Place {
   creator: User;
   favorite: boolean;
   likes: number;
+  customImage?: string;
 }
 
 // Place item props
@@ -101,4 +102,19 @@ export interface RequestLikePlaceData {
 export interface RequestDeletePlaceData {
   placeId: string;
   token: string;
+}
+
+// Get all users places reques/response data
+export interface RequestGetPlacesData {
+  signal: AbortSignal;
+  userId?: string;
+  pageParam: number;
+  searchParam: string;
+}
+
+export interface ResponseGetPlacesData {
+  places: Place[];
+  nextPage: number | null;
+  hasNextPage: boolean;
+  totalPlaces: number;
 }

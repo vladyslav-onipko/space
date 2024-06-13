@@ -7,7 +7,7 @@ import Button from '../UI/Base/Button';
 import Link from '../UI/Base/Link';
 
 import useAppSelector from '../../hooks/app/app-selector';
-import { PlaceItemProps, Place } from '../../models/places';
+import { PlaceItemProps, Place } from '../../models/place';
 import { placeRouts } from '../../router/routs';
 import { useLikePlace } from '../../hooks/http/like-place-query';
 
@@ -78,9 +78,9 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   const { id: placeId } = place;
 
   const detailPlaceRout = placeRouts.DETAIL_PLACE.replace(':id', placeId);
-  const queryKey = useMemo(() => ['places', placeId], [placeId]);
+  const favoritePlaceQueryKey = useMemo(() => ['places', placeId, 'favorite'], [placeId]);
 
-  const { mutate: likePlace } = useLikePlace(queryKey);
+  const { mutate: likePlace } = useLikePlace(favoritePlaceQueryKey);
 
   const handleLikePlace = ({ target }: React.MouseEvent<HTMLButtonElement>) => {
     likePlace({ placeId, userId: user.id, userLike: !isFavorite, onSetIsFavorite: setIsFavorite });
@@ -89,20 +89,25 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
 
   useEffect(() => {
     const setQueryData = async () => {
-      await queryClient.cancelQueries({ queryKey });
-      const oldPlace: Place = queryClient.getQueryData(queryKey) || place;
+      await queryClient.cancelQueries({ queryKey: favoritePlaceQueryKey });
+      const oldPlace: Place = queryClient.getQueryData(favoritePlaceQueryKey) || place;
 
-      queryClient.setQueryData(queryKey, oldPlace);
+      queryClient.setQueryData(favoritePlaceQueryKey, oldPlace);
       setIsFavorite(oldPlace.favorite);
     };
 
     setQueryData();
-  }, [place, queryClient, queryKey]);
+  }, [place, queryClient, favoritePlaceQueryKey]);
 
   return (
     <PlaceContainer>
       <PlacePicture>
-        <RokectImage src={`${process.env.REACT_APP_BACKEND_URL}/${place.image}`} alt={place.title}></RokectImage>
+        <RokectImage
+          src={place.customImage ? place.customImage : `${process.env.REACT_APP_BACKEND_URL}/${place.image}`}
+          alt={place.title}
+          height="300"
+          width="400"
+        ></RokectImage>
       </PlacePicture>
       <PlaceContentWrapper>
         <PlaceContent>

@@ -14,9 +14,9 @@ import Spinner from '../UI/Helpers/Spinner';
 import ContentWrapper from '../UI/Helpers/ContentWrapper';
 
 import useAppSelector from '../../hooks/app/app-selector';
-import { PlaceEditSchema } from '../../schemas/form-validation/places';
-import { PlaceEditInputValues } from '../../models/places';
-import { getPlace } from '../../utils/http/places';
+import { PlaceEditSchema } from '../../schemas/form-validation/place';
+import { PlaceEditInputValues } from '../../models/place';
+import { getPlace } from '../../utils/http/place';
 import { useEditPlace } from '../../hooks/http/edit-place-query';
 
 const PlaceEditModal: React.FC = () => {
@@ -25,14 +25,14 @@ const PlaceEditModal: React.FC = () => {
   const navigate = useNavigate();
   const { id: placeId } = useParams();
 
-  const queryKey = ['places', placeId];
+  const editPlaceQueryKey = ['places', placeId!];
 
   const { data, isPending, isError, error } = useQuery({
-    queryKey,
+    queryKey: editPlaceQueryKey,
     queryFn: ({ signal }) => getPlace({ signal, placeId: placeId! }),
   });
 
-  const { mutate } = useEditPlace(placeId);
+  const { mutate } = useEditPlace(editPlaceQueryKey);
 
   let modalContent;
 

@@ -11,6 +11,7 @@ import ProfileEditModal from '../components/User/ProfileEditModal';
 import PlaceCreateModal from '../components/Place/PlaceCreateModal';
 import PlaceEditModal from '../components/Place/PlaceEditModal';
 import PlaceDetail from '../pages/Place/PlaceDetail';
+import Places from '../pages/Place/Places';
 
 import { UrlParamsContextProvider } from '../store/http/url-params-context';
 
@@ -23,6 +24,24 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       { index: true, element: <HomePage /> },
+      {
+        path: placeRouts.ALL_PLACES,
+        element: (
+          <UrlParamsContextProvider>
+            <Places />
+          </UrlParamsContextProvider>
+        ),
+      },
+      {
+        path: placeRouts.DETAIL_PLACE,
+        element: <PlaceDetail />,
+        children: [
+          {
+            element: <ProtectedRoute needAuth />,
+            children: [{ path: placeRouts.EDIT_PLACE, element: <PlaceEditModal /> }],
+          },
+        ],
+      },
       {
         element: <ProtectedRoute needAuth={false} />,
         children: [
@@ -44,11 +63,6 @@ const router = createBrowserRouter([
               { path: userRouts.EDIT_PROFILE, element: <ProfileEditModal /> },
               { path: userRouts.ADD_PLACE, element: <PlaceCreateModal /> },
             ],
-          },
-          {
-            path: placeRouts.DETAIL_PLACE,
-            element: <PlaceDetail />,
-            children: [{ path: placeRouts.EDIT_PLACE, element: <PlaceEditModal /> }],
           },
         ],
       },

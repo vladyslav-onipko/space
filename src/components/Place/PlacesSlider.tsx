@@ -9,7 +9,7 @@ import PlaceItem from './PlaceItem';
 import Button from '../UI/Base/Button';
 import ContentWrapper from '../UI/Helpers/ContentWrapper';
 
-import { PlacesSliderProps } from '../../models/places';
+import { PlacesSliderProps } from '../../models/place';
 
 const PlacesSliderWrapper = styled.div`
   padding-top: 70px;

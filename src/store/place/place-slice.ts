@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import orderBy from 'lodash.orderby';
 
-import { Place } from '../../models/places';
+import { Place } from '../../models/place';
 
 interface PlacesState {
   places: Place[];

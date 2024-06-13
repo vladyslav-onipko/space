@@ -1,6 +1,6 @@
 import { styled } from 'styled-components';
 
-import { PlacesListProps } from '../../models/places';
+import { PlacesListProps } from '../../models/place';
 
 import PlaceItem from './PlaceItem';
 import ContentWrapper from '../UI/Helpers/ContentWrapper';

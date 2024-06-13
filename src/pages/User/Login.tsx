@@ -1,7 +1,6 @@
 import { Formik, FormikHelpers, FormikProps } from 'formik';
 import { styled } from 'styled-components';
 
-import HeroImage from '../../components/Hero/HeroImage';
 import Link from '../../components/UI/Base/Link';
 import Section from '../../components/UI/Base/Section';
 import Container from '../../components/UI/Base/Container';
@@ -14,7 +13,6 @@ import useAppDispatch from '../../hooks/app/app-dispatch';
 import usePasswordVisibility from '../../hooks/form/password-visibility';
 
 import { userRouts } from '../../router/routs';
-import shuttleImage from '../../assets/img/shuttle.jpg';
 import { SigninSchema } from '../../schemas/form-validation/user';
 import { SigninInputValues } from '../../models/user';
 import { auth } from '../../store/user/auth/auth-actions';
@@ -58,50 +56,50 @@ const Login: React.FC = () => {
   };
 
   return (
-    <>
-      <HeroImage title="Become a part of space" />
-      <Section hiddenTitle="Login form">
-        <Container>
-          <FormWrapper image={shuttleImage} title="Sign in">
-            <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={SigninSchema}>
-              {({ isValid, dirty, isSubmitting }: FormikProps<SigninInputValues>) => (
-                <Form
-                  actions={
-                    <Button
-                      disabled={(!isValid || !dirty) && !isSubmitting}
-                      type="submit"
-                      text={isSubmitting ? 'Submitting...' : 'Sign in'}
-                      mode="primary"
-                    />
-                  }
-                >
-                  <Input
-                    type="email"
-                    label="Email"
-                    placeholder="enter your email"
-                    id="email"
-                    name="email"
-                    icon={['far', 'envelope']}
-                    required
+    <Section hiddenTitle="Login form">
+      <Container>
+        <FormWrapper
+          image={`${process.env.REACT_APP_BACKEND_URL}/src/uploads/images/static/shuttle.jpg`}
+          title="Sign in"
+        >
+          <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={SigninSchema}>
+            {({ isValid, dirty, isSubmitting }: FormikProps<SigninInputValues>) => (
+              <Form
+                actions={
+                  <Button
+                    disabled={(!isValid || !dirty) && !isSubmitting}
+                    type="submit"
+                    text={isSubmitting ? 'Submitting...' : 'Sign in'}
+                    mode="primary"
                   />
-                  <Input
-                    type={type as 'password' | 'text'}
-                    label="Password"
-                    placeholder="enter your password"
-                    id="password"
-                    name="password"
-                    icon={icon}
-                    onChangePasswordVisibility={handleChangePasswordVisibility}
-                    required
-                  />
-                </Form>
-              )}
-            </Formik>
-            <RegisterLink type="router-link" mode="regular" text="Do not have an account?" to={userRouts.SIGNUP} />
-          </FormWrapper>
-        </Container>
-      </Section>
-    </>
+                }
+              >
+                <Input
+                  type="email"
+                  label="Email"
+                  placeholder="enter your email"
+                  id="email"
+                  name="email"
+                  icon={['far', 'envelope']}
+                  required
+                />
+                <Input
+                  type={type as 'password' | 'text'}
+                  label="Password"
+                  placeholder="enter your password"
+                  id="password"
+                  name="password"
+                  icon={icon}
+                  onChangePasswordVisibility={handleChangePasswordVisibility}
+                  required
+                />
+              </Form>
+            )}
+          </Formik>
+          <RegisterLink type="router-link" mode="regular" text="Do not have an account?" to={userRouts.SIGNUP} />
+        </FormWrapper>
+      </Container>
+    </Section>
   );
 };
 

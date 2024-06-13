@@ -1,7 +1,6 @@
 import { Formik, FormikProps, FormikHelpers } from 'formik';
 import { styled } from 'styled-components';
 
-import HeroImage from '../../components/Hero/HeroImage';
 import Input from '../../components/UI/Form/Elements/Input';
 import Form from '../../components/UI/Form/Form';
 import Button from '../../components/UI/Base/Button';
@@ -14,7 +13,6 @@ import Link from '../../components/UI/Base/Link';
 import useAppDispatch from '../../hooks/app/app-dispatch';
 import usePasswordVisibility from '../../hooks/form/password-visibility';
 
-import spacexImage from '../../assets/img/spacex.jpg';
 import { SignupSchema } from '../../schemas/form-validation/user';
 import { userRouts } from '../../router/routs';
 import { SignupInputValues } from '../../models/user';
@@ -71,76 +69,77 @@ const Registration: React.FC = () => {
   };
 
   return (
-    <>
-      <HeroImage title="Become a part of space" />
-      <Section hiddenTitle="Signup form">
-        <Container>
-          <FormWrapper image={spacexImage} title="Sing up for free">
-            <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={SignupSchema}>
-              {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<SignupInputValues>) => (
-                <Form
-                  actions={
-                    <Button
-                      disabled={(!isValid || !dirty) && !isSubmitting}
-                      type="submit"
-                      text={isSubmitting ? 'Submitting...' : 'Sign up'}
-                      mode="primary"
-                    />
-                  }
-                >
-                  <ImagePicker
-                    id="image"
-                    name="image"
-                    label="Avatar"
-                    onSetFieldValue={setFieldValue}
-                    onSetFieldTouched={setFieldTouched}
+    <Section hiddenTitle="Signup form">
+      <Container>
+        <FormWrapper
+          image={`${process.env.REACT_APP_BACKEND_URL}/src/uploads/images/static/spacex.jpg`}
+          title="Sing up for free"
+        >
+          <Formik initialValues={initialInputValues} onSubmit={handleSubmit} validationSchema={SignupSchema}>
+            {({ isValid, dirty, isSubmitting, setFieldValue, setFieldTouched }: FormikProps<SignupInputValues>) => (
+              <Form
+                actions={
+                  <Button
+                    disabled={(!isValid || !dirty) && !isSubmitting}
+                    type="submit"
+                    text={isSubmitting ? 'Submitting...' : 'Sign up'}
+                    mode="primary"
                   />
-                  <Input
-                    type="text"
-                    label="Username"
-                    placeholder="enter your name"
-                    id="name"
-                    name="name"
-                    icon={['far', 'circle-user']}
-                    required
-                  />
-                  <Input
-                    type="email"
-                    label="Email"
-                    placeholder="enter your email"
-                    id="email"
-                    name="email"
-                    icon={['far', 'envelope']}
-                    required
-                  />
-                  <Input
-                    type={type as 'password' | 'text'}
-                    label="Password"
-                    placeholder="enter your password"
-                    id="password"
-                    name="password"
-                    icon={icon}
-                    onChangePasswordVisibility={handleChangePasswordVisibility}
-                    required
-                  />
-                  <Input
-                    type={confPwType as 'password' | 'text'}
-                    label="Confirm password"
-                    placeholder="confirm your password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    icon={confPwIcon}
-                    onChangePasswordVisibility={handleChangeConfirmPasswordVisibility}
-                    required
-                  />
-                </Form>
-              )}
-            </Formik>
-            <LoginLink type="router-link" mode="regular" text="Already have an account?" to={userRouts.SIGNIN} />
-          </FormWrapper>
-        </Container>
-      </Section>
-    </>
+                }
+              >
+                <ImagePicker
+                  id="image"
+                  name="image"
+                  label="Avatar"
+                  imagePath="src/uploads/images/static/astronaut.jpg"
+                  onSetFieldValue={setFieldValue}
+                  onSetFieldTouched={setFieldTouched}
+                />
+                <Input
+                  type="text"
+                  label="Username"
+                  placeholder="enter your name"
+                  id="name"
+                  name="name"
+                  icon={['far', 'circle-user']}
+                  required
+                />
+                <Input
+                  type="email"
+                  label="Email"
+                  placeholder="enter your email"
+                  id="email"
+                  name="email"
+                  icon={['far', 'envelope']}
+                  required
+                />
+                <Input
+                  type={type as 'password' | 'text'}
+                  label="Password"
+                  placeholder="enter your password"
+                  id="password"
+                  name="password"
+                  icon={icon}
+                  onChangePasswordVisibility={handleChangePasswordVisibility}
+                  required
+                />
+                <Input
+                  type={confPwType as 'password' | 'text'}
+                  label="Confirm password"
+                  placeholder="confirm your password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  icon={confPwIcon}
+                  onChangePasswordVisibility={handleChangeConfirmPasswordVisibility}
+                  required
+                />
+              </Form>
+            )}
+          </Formik>
+          <LoginLink type="router-link" mode="regular" text="Already have an account?" to={userRouts.SIGNIN} />
+        </FormWrapper>
+      </Container>
+    </Section>
   );
 };
 

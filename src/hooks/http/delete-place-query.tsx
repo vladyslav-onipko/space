@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import useAppDispatch from '../app/app-dispatch';
 import useAppSelector from '../app/app-selector';
 import { showNotification } from '../../store/notification/notification-slice';
-import { deletePlace } from '../../utils/http/places';
+import { deletePlace } from '../../utils/http/place';
 import { userRouts } from '../../router/routs';
 
 export const useDeletePlace = (placeId: string | undefined) => {

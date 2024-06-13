@@ -5,8 +5,9 @@ import { styled } from 'styled-components';
 import Input from './../Elements/Input';
 import Button from '../../Base/Button';
 
-import astronautImg from '../../../../assets/img/astronaut.jpg';
 import { ImagePickerProps } from '../../../../models/form';
+import generateNumber from '../../../../utils/helpers/generate-number';
+import generateWords from '../../../../utils/helpers/generate-words';
 
 const ImagePickWrapper = styled.div`
   align-items: flex-end;
@@ -72,7 +73,9 @@ const ImagePicker: React.FC<ImagePickerProps> = ({
 
     const createPreview = async () => {
       if (!file) {
-        const imageUrl = imagePath ? `${process.env.REACT_APP_BACKEND_URL}/${imagePath}` : astronautImg;
+        const imageUrl = imagePath
+          ? `${process.env.REACT_APP_BACKEND_URL}/${imagePath}`
+          : `${process.env.REACT_APP_IMAGE_SERVICE_URL}/800/700?random=${generateNumber()}`;
 
         try {
           const response = await fetch(imageUrl);
@@ -99,7 +102,11 @@ const ImagePicker: React.FC<ImagePickerProps> = ({
     createPreview();
   }, [file, name, imagePath, onSetFieldValue]);
 
-  const previewEl = previewUrl ? <img src={previewUrl} alt={file?.name || 'Preview'} /> : <span>{error}</span>;
+  const previewEl = previewUrl ? (
+    <img src={previewUrl} alt={file?.name || generateWords(3)} height="250" width="250" />
+  ) : (
+    <span>{error}</span>
+  );
 
   return (
     <Input

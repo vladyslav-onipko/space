@@ -11,7 +11,7 @@ export const userRouts = {
 };
 
 export const placeRouts = {
-  ALL_Places: 'places',
+  ALL_PLACES: 'places',
   DETAIL_PLACE: `${baseRouts.HOME}/place/:id`,
   EDIT_PLACE: 'edit',
 };

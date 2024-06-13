@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import isequal from 'lodash.isequal';
 
-import { createPlace } from '../../utils/http/places';
+import { createPlace } from '../../utils/http/place';
 import { ServerInputError, ResponseError } from '../../models/http-error';
 import { showNotification } from '../../store/notification/notification-slice';
 import useAppDispatch from '../app/app-dispatch';

@@ -2,8 +2,8 @@ import { ComponentPropsWithoutRef, ReactNode } from 'react';
 import { styled, css } from 'styled-components';
 
 export const defaultTitlteStyles = css`
-  color: var(--color-black);
-  font-size: 3.2rem;
+  color: var(--color-1--3);
+  font-size: 4.2rem;
   font-weight: 800;
   margin-bottom: 40px;
   text-transform: uppercase;

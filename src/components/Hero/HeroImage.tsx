@@ -1,8 +1,11 @@
+import { memo } from 'react';
+
 import { styled } from 'styled-components';
 
 import Section from '../UI/Base/Section';
 
-import astronautIMG from '../../assets/img/astronaut.jpg';
+import generateNumber from '../../utils/helpers/generate-number';
+import generateWords from '../../utils/helpers/generate-words';
 
 const HeroPicture = styled.picture`
   display: block;
@@ -31,37 +34,49 @@ const HeroImg = styled.img`
 `;
 
 const HeroTitlte = styled.h2`
-  bottom: 160px;
   color: var(--color-white);
-  font-size: 4.8rem;
+  font-size: 2.8rem;
   font-weight: 800;
   left: 50%;
   position: absolute;
   text-align: center;
   text-transform: uppercase;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1;
 
   @media (max-width: 1279px) {
-    bottom: 110px;
-    font-size: 3.8rem;
+    font-size: 2rem;
   }
 
   @media (max-width: 767px) {
-    bottom: 80px;
-    font-size: 2.5rem;
+    font-size: 1.8rem;
   }
 `;
 
 const HeroImage: React.FC<{ title: string }> = ({ title }) => {
+  const imageId = generateNumber();
+
   return (
     <Section>
       <HeroTitlte>{title}</HeroTitlte>
       <HeroPicture>
-        <HeroImg src={astronautIMG} alt="astronaut" />
+        <source
+          srcSet={`${process.env.REACT_APP_IMAGE_SERVICE_URL}/479/240?random=${imageId}`}
+          media="(max-width: 479px)"
+        />
+        <source
+          srcSet={`${process.env.REACT_APP_IMAGE_SERVICE_URL}/767/240?random=${imageId}`}
+          media="(max-width: 767px)"
+        />
+        <source
+          srcSet={`${process.env.REACT_APP_IMAGE_SERVICE_URL}/1279/340?random=${imageId}`}
+          media="(max-width: 1279px)"
+        />
+        <HeroImg src={`${process.env.REACT_APP_IMAGE_SERVICE_URL}/1920/440?random=${imageId}`} alt={generateWords(3)} />
       </HeroPicture>
     </Section>
   );
 };
 
-export default HeroImage;
+export default memo(HeroImage);

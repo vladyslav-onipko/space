@@ -11,7 +11,9 @@ import {
   RequestDeletePlaceData,
   RequestGetPlaceData,
   RequestLikePlaceData,
-} from '../../models/places';
+  RequestGetPlacesData,
+  ResponseGetPlacesData,
+} from '../../models/place';
 
 export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promise<ResponseGetPlaceData | undefined> => {
   const url = `${process.env.REACT_APP_BACKEND_URL}/api/places/${placeId}`;
@@ -19,6 +21,29 @@ export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promis
   try {
     const response = await axios.get(url, { signal });
 
+    return response.data;
+  } catch (e: any) {
+    if (e.response) {
+      throw new HttpError(e.response.data.message);
+    }
+
+    if (e.request) {
+      throw new HttpError('Sorry, something went wrong, please try again later');
+    }
+  }
+};
+
+export const getPlaces = async ({
+  signal,
+  userId,
+  pageParam,
+  searchParam,
+}: RequestGetPlacesData): Promise<ResponseGetPlacesData | undefined> => {
+  try {
+    const response = await axios.get<ResponseGetPlacesData>(`${process.env.REACT_APP_BACKEND_URL}/api/places`, {
+      signal,
+      params: { user: userId, page: pageParam, search: searchParam },
+    });
     return response.data;
   } catch (e: any) {
     if (e.response) {
