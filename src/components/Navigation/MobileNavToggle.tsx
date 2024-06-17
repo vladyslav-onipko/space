@@ -21,7 +21,6 @@ const MobileNavToggle: React.FC<MobileNavToggleProps> = ({ onShowNav, ...props }
         text="Mobile navigation toggle"
         mode="secondary"
         icon={['fas', 'bars']}
-        title="menu"
         onlyIcon
         onClick={onShowNav}
       ></Button>

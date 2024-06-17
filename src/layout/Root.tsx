@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { styled } from 'styled-components';
+import { Tooltip } from 'react-tooltip';
 
 import Header from './Header';
 import Footer from './Footer';
@@ -44,7 +45,7 @@ const SiteWrapperFooter = styled.div`
 const Root: React.FC = () => {
   const location = useLocation();
   const randomNumber = Math.floor(Math.random() * (quotes.length - 1 - 1 + 1)) + 1;
-  console.log(randomNumber);
+
   const pageContentTop =
     location.pathname === baseRouts.HOME ? <HeroSlider /> : <HeroImage title={quotes[randomNumber].text} />;
 
@@ -58,6 +59,7 @@ const Root: React.FC = () => {
           {pageContentTop}
           <Outlet />
           <Notification />
+          <Tooltip id="place-tooltip" style={{ backgroundColor: '#2d3250', zIndex: 9999 }} />
         </main>
       </SiteWrapperMain>
       <SiteWrapperFooter>

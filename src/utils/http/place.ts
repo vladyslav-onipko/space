@@ -12,7 +12,6 @@ import {
   RequestGetPlaceData,
   RequestLikePlaceData,
   RequestGetPlacesData,
-  ResponseGetPlacesData,
 } from '../../models/place';
 
 export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promise<ResponseGetPlaceData | undefined> => {
@@ -33,16 +32,11 @@ export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promis
   }
 };
 
-export const getPlaces = async ({
-  signal,
-  userId,
-  pageParam,
-  searchParam,
-}: RequestGetPlacesData): Promise<ResponseGetPlacesData | undefined> => {
+export const getPlaces = async ({ signal, userId, pageParam, searchParam, topPlacesCount }: RequestGetPlacesData) => {
   try {
-    const response = await axios.get<ResponseGetPlacesData>(`${process.env.REACT_APP_BACKEND_URL}/api/places`, {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/places`, {
       signal,
-      params: { user: userId, page: pageParam, search: searchParam },
+      params: { user: userId, page: pageParam, search: searchParam, top: topPlacesCount },
     });
     return response.data;
   } catch (e: any) {

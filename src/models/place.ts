@@ -15,7 +15,15 @@ export interface Place {
   creator: User;
   favorite: boolean;
   likes: number;
-  customImage?: string;
+  [key: string]: any;
+}
+
+// Place data in detail page
+export interface UserTopPlace {
+  title: string;
+  image: string;
+  likes: number;
+  id: string;
 }
 
 // Place item props
@@ -41,15 +49,14 @@ export interface PlacesListProps extends ComponentPropsWithoutRef<'ul'> {
 // Get place reques/response data
 export interface RequestGetPlaceData {
   placeId: string;
-  signal: any;
+  signal: AbortSignal;
 }
 
 export interface ResponseGetPlaceData {
-  message: string;
   place: Place;
   userPlacesAmount: number;
   userRating: number;
-  topUserPlaces: { title: string; image: string; id: string }[];
+  topUserPlaces: UserTopPlace[];
 }
 
 // Edit place reques/response data
@@ -104,17 +111,22 @@ export interface RequestDeletePlaceData {
   token: string;
 }
 
-// Get all users places reques/response data
+// Get users places reques/response data
 export interface RequestGetPlacesData {
   signal: AbortSignal;
   userId?: string;
-  pageParam: number;
-  searchParam: string;
+  pageParam?: number | unknown;
+  searchParam?: string;
+  topPlacesCount?: number;
 }
 
-export interface ResponseGetPlacesData {
+export interface ResponseGetAllPlacesData {
   places: Place[];
   nextPage: number | null;
   hasNextPage: boolean;
   totalPlaces: number;
+}
+
+export interface ResponseGetTopPlacesData {
+  places: Place[];
 }

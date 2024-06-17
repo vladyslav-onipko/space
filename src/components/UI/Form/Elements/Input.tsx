@@ -125,7 +125,7 @@ const Input = forwardRef<HTMLInputElement, InputPropsType | TextareaPropsType>(
               text="Change password visibility"
               icon={icon}
               onlyIcon
-              title="Change password visibility"
+              tooltipContent="Change password visibility"
               onClick={onChangePasswordVisibility}
             />
           )}

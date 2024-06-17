@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { editPlace } from '../../utils/http/place';
-import { ResponseEditPlaceData } from '../../models/place';
-import useAppDispatch from '../app/app-dispatch';
-import { showNotification } from '../../store/notification/notification-slice';
+import { editPlace } from '../../../utils/http/place';
+import { ResponseEditPlaceData } from '../../../models/place';
+import useAppDispatch from '../../app/app-dispatch';
+import { showNotification } from '../../../store/notification/notification-slice';
 
 export const useSharePlace = (queryKey: (string | number | boolean | null)[]) => {
   const queryClient = useQueryClient();

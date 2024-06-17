@@ -13,7 +13,7 @@ import Checkbox from '../UI/Form/Elements/Checkbox';
 import useAppSelector from '../../hooks/app/app-selector';
 import { PlaceCreateInputValues } from '../../models/place';
 import { PlaceCreateSchema } from '../../schemas/form-validation/place';
-import { useCreatePlace } from '../../hooks/http/create-place-query';
+import { useCreatePlace } from '../../hooks/http/place/create-place-query';
 
 const PlaceCreateModal: React.FC = () => {
   const [showModal, setShowModal] = useState(true);

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { Formik, FormikHelpers, FormikProps } from 'formik';
-import { useQuery } from '@tanstack/react-query';
 
 import Form from '../UI/Form/Form';
 import Modal from '../UI/Base/Modal';
@@ -16,8 +15,8 @@ import ContentWrapper from '../UI/Helpers/ContentWrapper';
 import useAppSelector from '../../hooks/app/app-selector';
 import { PlaceEditSchema } from '../../schemas/form-validation/place';
 import { PlaceEditInputValues } from '../../models/place';
-import { getPlace } from '../../utils/http/place';
-import { useEditPlace } from '../../hooks/http/edit-place-query';
+import { useEditPlace } from '../../hooks/http/place/edit-place-query';
+import { useGetPlace } from '../../hooks/http/place/get-place-query';
 
 const PlaceEditModal: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
@@ -27,11 +26,7 @@ const PlaceEditModal: React.FC = () => {
 
   const editPlaceQueryKey = ['places', placeId!];
 
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: editPlaceQueryKey,
-    queryFn: ({ signal }) => getPlace({ signal, placeId: placeId! }),
-  });
-
+  const { data, isPending, isError, error } = useGetPlace(editPlaceQueryKey, placeId!);
   const { mutate } = useEditPlace(editPlaceQueryKey);
 
   let modalContent;

@@ -54,6 +54,7 @@ const Link: React.FC<AnchorProps | RouterLinkProps | NavLinkProps> = ({
   onlyIcon,
   text,
   children,
+  tooltipContent,
   ...props
 }) => {
   const LinkContent = (
@@ -72,20 +73,41 @@ const Link: React.FC<AnchorProps | RouterLinkProps | NavLinkProps> = ({
   switch (props.type) {
     case 'nav-link':
       return (
-        <NavLink $onlyIcon={!!onlyIcon} $mode={mode || 'default'} {...props}>
+        <NavLink
+          $onlyIcon={!!onlyIcon}
+          $mode={mode || 'default'}
+          data-tooltip-id="place-tooltip"
+          data-tooltip-place="top"
+          data-tooltip-content={tooltipContent}
+          {...props}
+        >
           {LinkContent}
         </NavLink>
       );
     case 'router-link':
       return (
-        <RouterLink $onlyIcon={!!onlyIcon} $mode={mode || 'default'} {...props}>
+        <RouterLink
+          $onlyIcon={!!onlyIcon}
+          $mode={mode || 'default'}
+          data-tooltip-id="place-tooltip"
+          data-tooltip-place="top"
+          data-tooltip-content={tooltipContent}
+          {...props}
+        >
           {LinkContent}
         </RouterLink>
       );
   }
 
   return (
-    <Anchor $onlyIcon={!!onlyIcon} $mode={mode || 'default'} {...props}>
+    <Anchor
+      $onlyIcon={!!onlyIcon}
+      $mode={mode || 'default'}
+      data-tooltip-id="place-tooltip"
+      data-tooltip-place="top"
+      data-tooltip-content={tooltipContent}
+      {...props}
+    >
       {LinkContent}
     </Anchor>
   );

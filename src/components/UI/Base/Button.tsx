@@ -34,9 +34,17 @@ const ButtonEl = styled.button<ButtonStylesConfig>`
   ${disabledButtonStyles};
 `;
 
-const Button: React.FC<ButtonProps> = ({ type, mode, icon, onlyIcon, text, children, ...props }) => {
+const Button: React.FC<ButtonProps> = ({ type, mode, icon, onlyIcon, text, tooltipContent, children, ...props }) => {
   return (
-    <ButtonEl type={type || 'button'} $onlyIcon={!!onlyIcon} $mode={mode || 'default'} {...props}>
+    <ButtonEl
+      type={type || 'button'}
+      $onlyIcon={!!onlyIcon}
+      $mode={mode || 'default'}
+      data-tooltip-id="place-tooltip"
+      data-tooltip-place="top"
+      data-tooltip-content={tooltipContent}
+      {...props}
+    >
       {children}
       {!onlyIcon && <ButtonText>{text}</ButtonText>}
       {onlyIcon && <ButtontTextHidden>{text}</ButtontTextHidden>}

@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import isequal from 'lodash.isequal';
 
-import { createPlace } from '../../utils/http/place';
-import { ServerInputError, ResponseError } from '../../models/http-error';
-import { showNotification } from '../../store/notification/notification-slice';
-import useAppDispatch from '../app/app-dispatch';
-import { UrlParamsContext } from '../../store/http/url-params-context';
+import { createPlace } from '../../../utils/http/place';
+import { ResponseError } from '../../../models/http-error';
+import { showNotification } from '../../../store/notification/notification-slice';
+import useAppDispatch from '../../app/app-dispatch';
+import { UrlParamsContext } from '../../../store/http/url-params-context';
 
 export const useCreatePlace = () => {
   const queryClient = useQueryClient();
@@ -34,7 +34,7 @@ export const useCreatePlace = () => {
       dispatch(showNotification({ message: error.message, status: 'error' }));
 
       if (error.errors && error.errors.length) {
-        error.errors.forEach((error: ServerInputError) => data.setFieldError!(error.field, error.message));
+        error.errors.forEach((error) => data.setFieldError!(error.field, error.message));
       }
     },
   });

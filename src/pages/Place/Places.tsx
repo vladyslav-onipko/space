@@ -1,6 +1,5 @@
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { styled } from 'styled-components';
 
 import PlacesList from '../../components/Place/PlacesList';
@@ -12,12 +11,11 @@ import ToolsBar from '../../components/ToolsBar/ToolsBar';
 import Title from '../../components/UI/Base/Title';
 import PlacesStatusBar from '../../components/Place/PlacesStatusBar';
 
-import { getPlaces } from '../../utils/http/place';
 import useAppSelector from '../../hooks/app/app-selector';
 import useAppDispatch from '../../hooks/app/app-dispatch';
-import { UrlParamsContext } from '../../store/http/url-params-context';
 import { setPlaces } from '../../store/place/place-slice';
 import { Place } from '../../models/place';
+import { useGetAllPlaces } from '../../hooks/http/place/get-all-places-query';
 
 const LoadMoreTarget = styled.div`
   bottom: -18%;
@@ -38,17 +36,10 @@ const LoadMoreTarget = styled.div`
 `;
 
 const Places: React.FC = () => {
-  const { id: userId } = useAppSelector((state) => state.auth.user);
   const appPlaces = useAppSelector((state) => state.places.places);
-  const { urlParams } = useContext(UrlParamsContext);
   const dispatch = useAppDispatch();
 
-  const { data, isSuccess, isLoading, isError, fetchNextPage, hasNextPage, error } = useInfiniteQuery({
-    queryKey: ['places', urlParams.search],
-    initialPageParam: 1,
-    queryFn: ({ pageParam, signal }) => getPlaces({ pageParam, searchParam: urlParams.search, signal, userId }),
-    getNextPageParam: (lastPage) => (lastPage?.hasNextPage ? lastPage?.nextPage : null),
-  });
+  const { data, isSuccess, isLoading, isError, fetchNextPage, hasNextPage, error } = useGetAllPlaces();
 
   let content;
   const loadMoreRef = useRef<HTMLDivElement | null>(null);

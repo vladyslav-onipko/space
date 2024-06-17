@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { useSearchParams } from 'react-router-dom';
 
-const useAddUrlParams = () => {
+export const useAddUrlParams = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const addUrlParam = useCallback(
@@ -26,5 +26,3 @@ const useAddUrlParams = () => {
 
   return { searchParams, addUrlParam, clearUrlParams };
 };
-
-export default useAddUrlParams;

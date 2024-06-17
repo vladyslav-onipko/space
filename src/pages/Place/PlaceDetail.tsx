@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams, useNavigate, Outlet, Link as RouterLink } from 'react-router-dom';
 
-import { useQuery } from '@tanstack/react-query';
 import { styled } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -16,10 +15,11 @@ import Modal from '../../components/UI/Base/Modal';
 import Link from '../../components/UI/Base/Link';
 
 import useAppSelector from '../../hooks/app/app-selector';
-import { getPlace } from '../../utils/http/place';
 import { placeRouts } from '../../router/routs';
-import { useSharePlace } from '../../hooks/http/share-place-query';
-import { useDeletePlace } from '../../hooks/http/delete-place-query';
+import { useSharePlace } from '../../hooks/http/place/share-place-query';
+import { useDeletePlace } from '../../hooks/http/place/delete-place-query';
+import { useGetPlace } from '../../hooks/http/place/get-place-query';
+import { UserTopPlace } from '../../models/place';
 
 const PlaceWrapper = styled.div`
   display: flex;
@@ -104,6 +104,7 @@ const PlaceContentTag = styled.p`
   background-color: var(--color-2--1);
   border-radius: 10px;
   color: var(--color-1--3);
+  cursor: default;
   display: flex;
   font-size: 2.2rem;
   font-weight: 700;
@@ -242,7 +243,7 @@ const TopPlacePicture = styled.picture`
   height: 150px;
 `;
 
-const UserTopPlacesList: React.FC<{ items: { title: string; image: string; id: string }[] }> = ({ items }) => {
+const UserTopPlacesList: React.FC<{ items: UserTopPlace[] }> = ({ items }) => {
   return (
     <TopPlacesList>
       {items.map((item) => (
@@ -269,15 +270,11 @@ const PlaceDetail: React.FC = () => {
   const { isAuth, user, token } = useAppSelector((state) => state.auth);
   const { id: placeId } = useParams();
 
-  const editPlaceQueryKey = ['places', placeId!];
+  const detailPlaceQueryKey = useMemo(() => ['places', placeId!], [placeId]);
 
-  const { data, isSuccess, isPending, isError, error } = useQuery({
-    queryKey: editPlaceQueryKey,
-    queryFn: ({ signal }) => getPlace({ signal, placeId: placeId! }),
-  });
-
-  const { mutate: sharePlace } = useSharePlace(editPlaceQueryKey);
-  const { mutate: removePlace, isPending: isRemoving } = useDeletePlace(placeId);
+  const { data, isSuccess, isPending, isError, error } = useGetPlace(detailPlaceQueryKey, placeId!);
+  const { mutate: sharePlace } = useSharePlace(detailPlaceQueryKey);
+  const { mutate: removePlace, isPending: isRemoving } = useDeletePlace();
 
   const isAuthorized = isAuth && user.id === data?.place.creator.id;
 
@@ -334,7 +331,7 @@ const PlaceDetail: React.FC = () => {
             )}
             {isAuthorized && (
               <DropdownButton
-                title="more"
+                tooltipContent="more"
                 text="more place actions"
                 icon={['fas', 'ellipsis-vertical']}
                 mode="secondary"
@@ -384,19 +381,31 @@ const PlaceDetail: React.FC = () => {
                 />
               </PlaceAuthorPicture>
               <PlaceContentTags>
-                <PlaceContentTag>
+                <PlaceContentTag
+                  data-tooltip-id="place-tooltip"
+                  data-tooltip-place="top"
+                  data-tooltip-content="author name"
+                >
                   <PlaceContentIcon>
                     <FontAwesomeIcon icon={['fas', 'user-astronaut']} />
                   </PlaceContentIcon>{' '}
                   {data.place.creator.name}
                 </PlaceContentTag>
-                <PlaceContentTag>
+                <PlaceContentTag
+                  data-tooltip-id="place-tooltip"
+                  data-tooltip-place="top"
+                  data-tooltip-content="total places"
+                >
                   <PlaceContentIcon>
                     <FontAwesomeIcon icon={['fas', 'rocket']} />
                   </PlaceContentIcon>
                   {data.userPlacesAmount}
                 </PlaceContentTag>
-                <PlaceContentTag>
+                <PlaceContentTag
+                  data-tooltip-id="place-tooltip"
+                  data-tooltip-place="top"
+                  data-tooltip-content=" author rating"
+                >
                   <PlaceContentIcon>
                     <FontAwesomeIcon icon={['fas', 'star']} />
                   </PlaceContentIcon>
@@ -414,13 +423,17 @@ const PlaceDetail: React.FC = () => {
           <PlaceContentWrapper>
             <PlaceContentTitle>Details</PlaceContentTitle>
             <PlaceContentTags>
-              <PlaceContentTag>
+              <PlaceContentTag data-tooltip-id="place-tooltip" data-tooltip-place="top" data-tooltip-content="likes">
                 <PlaceContentIcon>
                   <FontAwesomeIcon icon={['far', 'heart']} />
                 </PlaceContentIcon>
                 {`${data.place.likes} like${data.place.likes > 1 ? 's' : ''}`}
               </PlaceContentTag>
-              <PlaceContentTag>
+              <PlaceContentTag
+                data-tooltip-id="place-tooltip"
+                data-tooltip-place="top"
+                data-tooltip-content="created date"
+              >
                 <PlaceContentIcon>
                   <FontAwesomeIcon icon={['far', 'clock']} />
                 </PlaceContentIcon>

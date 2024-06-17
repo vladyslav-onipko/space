@@ -3,7 +3,6 @@ import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import { styled } from 'styled-components';
-import { useQuery } from '@tanstack/react-query';
 
 import Container from '../../components/UI/Base/Container';
 import Aside from '../../components/UI/Base/Aside';
@@ -20,9 +19,9 @@ import useAppSelector from '../../hooks/app/app-selector';
 import useAppDispatch from '../../hooks/app/app-dispatch';
 
 import { userRouts } from '../../router/routs';
-import { getUserProfile } from '../../utils/http/user';
 import { UrlParamsContext } from '../../store/http/url-params-context';
 import { setPlaces } from '../../store/place/place-slice';
+import { useGetProfile } from '../../hooks/http/user/get-profile-query';
 
 const ProfileContentContainer = styled(Container)`
   display: flex;
@@ -100,17 +99,13 @@ const PlacesContentWrapper = styled.div`
 `;
 
 const Profile: React.FC = () => {
-  const { user, token } = useAppSelector((state) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
   const appPlaces = useAppSelector((state) => state.places.places);
   const { urlParams, setUrlParams } = useContext(UrlParamsContext);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { data, isSuccess, isPending, isError, error } = useQuery({
-    queryKey: ['places', urlParams],
-    queryFn: ({ signal }) => getUserProfile({ userId: user.id, token, urlParams, signal }),
-    staleTime: 5000,
-  });
+  const { data, isSuccess, isPending, isError, error } = useGetProfile();
 
   let placesContent;
   const clearPlaces = useRef(true);

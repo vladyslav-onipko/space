@@ -15,6 +15,7 @@ const ModalBlock = styled.div`
   border-radius: 4px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   left: 50%;
   margin: 0;
   max-height: 90%;
@@ -107,12 +108,12 @@ const ModalOverlay = forwardRef<HTMLDivElement, ModalProps>(({ actions, title, o
     <ModalBlock ref={ref} aria-modal="true" role="dialog">
       <ModalHeader>
         <ModalTitle>{title}</ModalTitle>
-        <ModalCloseButton text="close" title="close" icon={['fas', 'xmark']} onlyIcon onClick={onShowModal} />
+        <ModalCloseButton text="close" tooltipContent="close" icon={['fas', 'xmark']} onlyIcon onClick={onShowModal} />
       </ModalHeader>
       <ModalContent>{children}</ModalContent>
       {actions && (
         <ModalActions>
-          <Button text="cancel" title="cancel" onClick={onShowModal} />
+          <Button text="cancel" onClick={onShowModal} />
           {actions}
         </ModalActions>
       )}

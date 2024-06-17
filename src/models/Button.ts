@@ -14,4 +14,5 @@ export interface ButtonProps extends ComponentPropsWithoutRef<'button'> {
   icon?: IconProp;
   onlyIcon?: boolean;
   text: string;
+  tooltipContent?: string;
 }

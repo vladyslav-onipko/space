@@ -2,13 +2,13 @@ import { useNavigate } from 'react-router-dom';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { editPlace } from '../../utils/http/place';
-import { ResponseEditPlaceData } from '../../models/place';
-import useAppDispatch from '../app/app-dispatch';
-import { showNotification } from '../../store/notification/notification-slice';
-import { ResponseError, ServerInputError } from '../../models/http-error';
+import { editPlace } from '../../../utils/http/place';
+import { ResponseEditPlaceData } from '../../../models/place';
+import useAppDispatch from '../../app/app-dispatch';
+import { showNotification } from '../../../store/notification/notification-slice';
+import { ResponseError } from '../../../models/http-error';
 
-export const useEditPlace = (queryKey: (string | number | boolean | null | undefined)[]) => {
+export const useEditPlace = (queryKey: (string | number | boolean | null)[]) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -34,7 +34,7 @@ export const useEditPlace = (queryKey: (string | number | boolean | null | undef
       dispatch(showNotification({ message: error.message, status: 'error' }));
 
       if (error.errors && error.errors.length) {
-        error.errors.forEach((error: ServerInputError) => data.setFieldError!(error.field, error.message));
+        error.errors.forEach((error) => data.setFieldError!(error.field, error.message));
       }
     },
     onSettled() {

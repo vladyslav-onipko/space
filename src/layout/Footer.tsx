@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
                     text="github"
                     href="https://github.com/vladyslav-onipko"
                     icon={['fab', 'github']}
-                    title="github"
+                    tooltipContent="github"
                     target="_blank"
                     onlyIcon
                   />
@@ -111,7 +111,7 @@ const Footer: React.FC = () => {
                     text="linkedin"
                     href="https://www.linkedin.com/in/vladislav-onipko/"
                     icon={['fab', 'linkedin-in']}
-                    title="linkedin"
+                    tooltipContent="linkedin"
                     target="_blank"
                     onlyIcon
                   />

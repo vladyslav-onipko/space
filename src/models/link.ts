@@ -15,6 +15,7 @@ interface DefaultLinkProps {
   icon?: IconProp;
   onlyIcon?: boolean;
   text: string;
+  tooltipContent?: string;
 }
 
 export interface AnchorProps extends DefaultLinkProps, ComponentPropsWithoutRef<'a'> {

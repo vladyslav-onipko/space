@@ -10,7 +10,7 @@ interface Image {
 
 const images: Image[] = [];
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 4; i++) {
   const image = {
     path: `${process.env.REACT_APP_IMAGE_SERVICE_URL}/1920/740?random=${i}`,
     sourceTablet: `${process.env.REACT_APP_IMAGE_SERVICE_URL}/1279/500?random=${i}`,

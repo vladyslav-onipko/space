@@ -13,7 +13,7 @@ import DUMMY_LINKS from '../../utils/helpers/nav-links';
 import { slideAnimation } from '../../assets/css/helpers/animations';
 
 const MobileNavBlock = styled.aside`
-  background-color: var(--color-1--3);
+  background-color: var(--color-1--1);
   height: 100vh;
   display: block;
   left: 0;
@@ -51,9 +51,16 @@ const MobileNavWrapper = styled.nav`
 `;
 
 const ModileCloseButton = styled(Button)`
+  background-color: transparent;
+  border: none;
   position: absolute;
-  right: 15px;
+  right: 20px;
   top: 15px;
+
+  &:hover,
+  &:focus {
+    background-color: inherit;
+  }
 `;
 
 interface MobileNavProps {
@@ -70,7 +77,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ show, onShowNav }) => {
           text="Close navigation"
           mode="secondary"
           icon={['fas', 'xmark']}
-          title="close"
+          tooltipContent="close"
           onlyIcon
           onClick={() => onShowNav}
         />

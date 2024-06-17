@@ -10,6 +10,7 @@ import Button from '../UI/Base/Button';
 import ContentWrapper from '../UI/Helpers/ContentWrapper';
 
 import { PlacesSliderProps } from '../../models/place';
+import generateNumber from '../../utils/helpers/generate-number';
 
 const PlacesSliderWrapper = styled.div`
   padding-top: 70px;
@@ -97,6 +98,8 @@ const DummyText = styled.p`
 `;
 
 const PlacesSlider: React.FC<PlacesSliderProps> = ({ places, slidesPerView, ...props }) => {
+  const navButtonIndex = generateNumber();
+
   if (!places.length) {
     return (
       <ContentWrapper>
@@ -111,16 +114,14 @@ const PlacesSlider: React.FC<PlacesSliderProps> = ({ places, slidesPerView, ...p
         <NavButton
           mode="secondary"
           text="Previous"
-          className="review-swiper-button-prev"
+          className={`review-swiper-button-prev-${navButtonIndex}`}
           icon={['fas', 'angle-left']}
-          title="Previous"
           onlyIcon
         />
         <NavButton
           mode="secondary"
           text="Next"
-          title="Next"
-          className="review-swiper-button-next"
+          className={`review-swiper-button-next-${navButtonIndex}`}
           icon={['fas', 'angle-right']}
           onlyIcon
         />
@@ -129,8 +130,8 @@ const PlacesSlider: React.FC<PlacesSliderProps> = ({ places, slidesPerView, ...p
         modules={[Navigation, Pagination, A11y]}
         pagination={{ clickable: true }}
         navigation={{
-          nextEl: '.review-swiper-button-next',
-          prevEl: '.review-swiper-button-prev',
+          nextEl: `.review-swiper-button-next-${navButtonIndex}`,
+          prevEl: `.review-swiper-button-prev-${navButtonIndex}`,
         }}
         breakpoints={{
           640: { slidesPerView: slidesPerView?.mobile || 1 },

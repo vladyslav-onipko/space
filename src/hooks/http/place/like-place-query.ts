@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { likePlace } from '../../utils/http/place';
-import { Place } from '../../models/place';
+import { likePlace } from '../../../utils/http/place';
+import { Place } from '../../../models/place';
 
 export const useLikePlace = (queryKey: (string | number | boolean | null)[]) => {
   const queryClient = useQueryClient();
