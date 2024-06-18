@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
-import PlacesList from '../../components/Place/PlacesList';
+import PlaceItem from '../../components/Place/PlaceItem';
+import ItemsList from '../../components/UI/Base/ItemsList';
 import ErrorBlock from '../../components/UI/Helpers/ErrorBlock';
 import Loader from '../../components/UI/Helpers/Loader';
 import Container from '../../components/UI/Base/Container';
@@ -38,8 +40,11 @@ const LoadMoreTarget = styled.div`
 const Places: React.FC = () => {
   const appPlaces = useAppSelector((state) => state.places.places);
   const dispatch = useAppDispatch();
+  const { userId } = useParams();
 
-  const { data, isSuccess, isLoading, isError, fetchNextPage, hasNextPage, error } = useGetAllPlaces();
+  const filter: 'user' | '' = userId ? 'user' : '';
+
+  const { data, isSuccess, isLoading, isError, fetchNextPage, hasNextPage, error } = useGetAllPlaces(filter, userId);
 
   let content;
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -79,15 +84,15 @@ const Places: React.FC = () => {
   }
 
   if (isSuccess && !isLoading) {
-    content = <PlacesList places={appPlaces} />;
+    content = <ItemsList items={appPlaces} listItem={PlaceItem} />;
   }
 
   return (
     <Section>
       <Container>
-        <Title tag="h2">People share these places</Title>
+        <Title tag="h2">{filter === 'user' ? 'User shares these places' : 'People share these places'}</Title>
         <ToolsBar />
-        <PlacesStatusBar loaded={appPlaces.length} from={data?.pages[0]?.totalPlaces || 0} />
+        <PlacesStatusBar loaded={appPlaces.length} from={data?.pages[0]?.placesAmount || 0} />
         {content}
         <LoadMoreTarget ref={loadMoreRef}></LoadMoreTarget>
       </Container>

@@ -2,29 +2,41 @@ import { useEffect, useState } from 'react';
 
 import { useQuery as useApolloQuery } from '@apollo/client';
 
-import PlacesSlider from '../components/Place/PlacesSlider';
+import PlaceItem from '../components/Place/PlaceItem';
 import ErrorBlock from '../components/UI/Helpers/ErrorBlock';
 import Section from '../components/UI/Base/Section';
 import Container from '../components/UI/Base/Container';
 import Title from '../components/UI/Base/Title';
 import Spinner from '../components/UI/Helpers/Spinner';
 import ContentWrapper from '../components/UI/Helpers/ContentWrapper';
+import Slider from '../components/UI/Base/Slider';
+import UserItem from '../components/User/UserItem';
 
 import { GET_ROCKETS } from '../schemas/query/get-rockets';
 import { Place } from '../models/place';
 import { useGetTopPlaces } from '../hooks/http/place/get-top-places-query';
+import { useGetUsers } from '../hooks/http/user/get-users-query';
 
 const Home: React.FC = () => {
   const [rockets, setRockets] = useState([]);
 
   const { data: rocketsData, loading: isRocketsLoading, error: rocketsError } = useApolloQuery(GET_ROCKETS);
+
   const {
     data: topPlacesData,
     isSuccess: isPlacesSuccess,
     isPending: isPlacesPending,
     isError: isPlacesError,
     error: topPlacesError,
-  } = useGetTopPlaces();
+  } = useGetTopPlaces(9);
+
+  const {
+    data: usersData,
+    isSuccess: isUsersSuccess,
+    isPending: isUsersPending,
+    isError: isUsersError,
+    error: usersError,
+  } = useGetUsers(9);
 
   useEffect(() => {
     if (rocketsData) {
@@ -53,7 +65,7 @@ const Home: React.FC = () => {
             </ContentWrapper>
           )}
           {rocketsError && <ErrorBlock message={rocketsError.message}></ErrorBlock>}
-          {!isRocketsLoading && rocketsData && <PlacesSlider places={rockets} />}
+          {!isRocketsLoading && rocketsData && <Slider items={rockets} slideItem={PlaceItem} />}
         </Container>
       </Section>
       <Section>
@@ -65,7 +77,19 @@ const Home: React.FC = () => {
             </ContentWrapper>
           )}
           {isPlacesError && <ErrorBlock message={topPlacesError.message}></ErrorBlock>}
-          {isPlacesSuccess && !isPlacesPending && <PlacesSlider places={topPlacesData.places} />}
+          {isPlacesSuccess && !isPlacesPending && <Slider items={topPlacesData.places} slideItem={PlaceItem} />}
+        </Container>
+      </Section>
+      <Section>
+        <Container>
+          <Title tag="h2">Top people</Title>
+          {isUsersPending && (
+            <ContentWrapper>
+              <Spinner />
+            </ContentWrapper>
+          )}
+          {isUsersError && <ErrorBlock message={usersError.message}></ErrorBlock>}
+          {isUsersSuccess && usersData && !isPlacesPending && <Slider items={usersData.users} slideItem={UserItem} />}
         </Container>
       </Section>
     </>

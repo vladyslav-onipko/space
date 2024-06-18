@@ -5,6 +5,7 @@ import { setUserData } from './auth-slice';
 import { AppDispatch } from '../..';
 import { setUserCookies, getUserCookies, removeUserCookies } from '../../../utils/helpers/user-cookies';
 import HttpError from '../../../models/http-error';
+import { showNotification } from '../../notification/notification-slice';
 
 let tokenTimer: ReturnType<typeof setTimeout>;
 
@@ -36,6 +37,9 @@ export const auth = (mode: 'signin' | 'signup', userData: SignupInputValues | Si
 
       tokenTimer = setTimeout(() => {
         dispatch(logout());
+        dispatch(
+          showNotification({ message: 'Your session token has expired. Need to log in again.', status: 'error' })
+        );
       }, response.data.tokenExpiration);
 
       return { message: response.data.message };

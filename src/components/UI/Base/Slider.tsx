@@ -1,3 +1,5 @@
+import { ComponentPropsWithoutRef, ElementType } from 'react';
+
 import { styled } from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, A11y, Navigation } from 'swiper/modules';
@@ -5,14 +7,12 @@ import { Pagination, A11y, Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-import PlaceItem from './PlaceItem';
-import Button from '../UI/Base/Button';
-import ContentWrapper from '../UI/Helpers/ContentWrapper';
+import Button from '../../UI/Base/Button';
+import InfoBlock from '../../UI/Helpers/InfoBlock';
 
-import { PlacesSliderProps } from '../../models/place';
-import generateNumber from '../../utils/helpers/generate-number';
+import generateNumber from '../../../utils/helpers/generate-number';
 
-const PlacesSliderWrapper = styled.div`
+const SliderWrapper = styled.div`
   padding-top: 70px;
   position: relative;
   width: 100%;
@@ -22,7 +22,7 @@ const PlacesSliderWrapper = styled.div`
   }
 `;
 
-const PlacesSwiper = styled(Swiper)`
+const SwiperContainer = styled(Swiper)`
   margin: 0 -12px;
 
   & .swiper-button-prev,
@@ -68,7 +68,7 @@ const PlacesSwiper = styled(Swiper)`
   }
 `;
 
-const PlacesSlide = styled(SwiperSlide)`
+const SlideWrapper = styled(SwiperSlide)`
   height: auto;
   padding: 0 12px;
 `;
@@ -93,23 +93,26 @@ const NavButton = styled(Button)`
   min-width: 44px;
 `;
 
-const DummyText = styled.p`
-  font-size: 2.2rem;
-`;
+interface SliderProps extends ComponentPropsWithoutRef<'div'> {
+  items: { [key: string]: any }[];
+  slideItem: ElementType;
+  slidesPerView?: {
+    desktop: number;
+    tablet: number;
+    mobile: number;
+  };
+}
 
-const PlacesSlider: React.FC<PlacesSliderProps> = ({ places, slidesPerView, ...props }) => {
+const Slider: React.FC<SliderProps> = ({ items, slidesPerView, slideItem, ...props }) => {
   const navButtonIndex = generateNumber();
+  const Component = slideItem;
 
-  if (!places.length) {
-    return (
-      <ContentWrapper>
-        <DummyText>There are no places now :(</DummyText>
-      </ContentWrapper>
-    );
+  if (!items.length) {
+    return <InfoBlock />;
   }
 
   return (
-    <PlacesSliderWrapper {...props}>
+    <SliderWrapper {...props}>
       <NavWrapper>
         <NavButton
           mode="secondary"
@@ -126,7 +129,7 @@ const PlacesSlider: React.FC<PlacesSliderProps> = ({ places, slidesPerView, ...p
           onlyIcon
         />
       </NavWrapper>
-      <PlacesSwiper
+      <SwiperContainer
         modules={[Navigation, Pagination, A11y]}
         pagination={{ clickable: true }}
         navigation={{
@@ -139,16 +142,16 @@ const PlacesSlider: React.FC<PlacesSliderProps> = ({ places, slidesPerView, ...p
           1279: { slidesPerView: slidesPerView?.desktop || 3 },
         }}
       >
-        {places.map((place) => {
+        {items.map((item) => {
           return (
-            <PlacesSlide key={place.id}>
-              <PlaceItem place={place} />
-            </PlacesSlide>
+            <SlideWrapper key={item.id}>
+              <Component item={item} />
+            </SlideWrapper>
           );
         })}
-      </PlacesSwiper>
-    </PlacesSliderWrapper>
+      </SwiperContainer>
+    </SliderWrapper>
   );
 };
 
-export default PlacesSlider;
+export default Slider;

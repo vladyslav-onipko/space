@@ -1,13 +1,15 @@
+import { ComponentPropsWithoutRef } from 'react';
 import { Place } from './place';
 
-// Full user data
+// User data
 export type User = {
   id: string;
   name: string;
   image: string;
+  [key: string]: any;
 };
 
-// user auth
+// User auth data
 export interface UserData {
   token: string | null;
   isAuth: boolean;
@@ -36,10 +38,17 @@ export interface SigninInputValues {
   password: string;
 }
 
-// user profile
+// User profile response/request deta
 export interface ProfileEditInputValues {
   image: File | string;
   name: string;
+}
+
+export interface RequestGetUserProfileData {
+  userId: string;
+  token: string | null;
+  urlParams: { [key: string]: string | number };
+  signal: any;
 }
 
 export interface ResponseGetUserProfileData {
@@ -53,9 +62,23 @@ export interface ResponseGetUserProfileData {
   currentPlacesAmount: number;
 }
 
-// user cookies data
+// Get users response/request deta
+export interface ResposneGetUsersData {
+  users: User[];
+}
+
+export interface RequestGetUsersData {
+  max?: number;
+  signal: AbortSignal;
+}
+
+// User cookies data
 export interface UserCookiesData {
   user: User;
   token: string;
   tokenExpiration: number;
+}
+
+export interface UserItemProps extends ComponentPropsWithoutRef<'article'> {
+  item: User;
 }

@@ -442,7 +442,11 @@ const PlaceDetail: React.FC = () => {
             </PlaceContentTags>
           </PlaceContentWrapper>
           <PlaceContentWrapper>
-            <Link text={`see all ${data.place.creator.name}'s places`} type="router-link" to="/" />
+            <Link
+              text={`see all ${data.place.creator.name}'s places`}
+              type="router-link"
+              to={placeRouts.USER_PLACES.replace(':userId', data.place.creator.id)}
+            />
           </PlaceContentWrapper>
         </PlaceContent>
       </PlaceWrapper>

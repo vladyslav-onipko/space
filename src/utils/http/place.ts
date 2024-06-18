@@ -32,11 +32,26 @@ export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promis
   }
 };
 
-export const getPlaces = async ({ signal, userId, pageParam, searchParam, topPlacesCount }: RequestGetPlacesData) => {
+export const getPlaces = async ({
+  signal,
+  sessionUserId,
+  creatorId,
+  pageParam,
+  searchParam,
+  topPlacesCount,
+  filterParam,
+}: RequestGetPlacesData) => {
   try {
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/places`, {
       signal,
-      params: { user: userId, page: pageParam, search: searchParam, top: topPlacesCount },
+      params: {
+        user: sessionUserId,
+        creator: creatorId,
+        page: pageParam,
+        search: searchParam,
+        filter: filterParam,
+        top: topPlacesCount,
+      },
     });
     return response.data;
   } catch (e: any) {
@@ -119,16 +134,13 @@ export const editPlace = async ({
   }
 };
 
-export const likePlace = async ({ placeId, userId, userLike }: RequestLikePlaceData) => {
+export const likePlace = async ({ placeId, userId }: RequestLikePlaceData) => {
   try {
     const response = await axios.patch(
       `${process.env.REACT_APP_BACKEND_URL}/api/places/${placeId}/favorite`,
       {},
       {
-        params: {
-          userId,
-          like: userLike,
-        },
+        params: { userId },
       }
     );
 

@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 import { styled } from 'styled-components';
 
 import useAppDispatch from '../../hooks/app/app-dispatch';
-
+import useAppSelector from '../../hooks/app/app-selector';
 import { sortPlaces } from '../../store/place/place-slice';
 
 const SortButtonsWrapper = styled.div`
@@ -45,35 +45,39 @@ export const SORT_PARAM_KEY = 'sort';
 const SortBar: React.FC = () => {
   const [searchParam, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
+  const appPlaces = useAppSelector((state) => state.places.places);
+
   const sortParamValue = searchParam.get(SORT_PARAM_KEY) || DEFAULT_SORT_PARAM_VALUE;
-  const [buttonActive, setButtonActive] = useState<{ [key: string]: boolean }>({ [sortParamValue]: true });
+  const hasPlaces = useMemo(() => appPlaces.length, [appPlaces]);
+
+  const [activeButton, setActiveButton] = useState<{ [key: string]: boolean }>({ [sortParamValue]: true });
 
   const handleAddSortParam = ({ target }: React.MouseEvent) => {
     const dataValue = (target as HTMLButtonElement).dataset.sort!;
 
     setSearchParams({ sort: dataValue });
-    setButtonActive((prevState) => {
+    setActiveButton((prevState) => {
       return { [dataValue]: !prevState[dataValue] };
     });
   };
 
   useEffect(() => {
     dispatch(sortPlaces(sortParamValue));
-  }, [sortParamValue, dispatch]);
+  }, [sortParamValue, dispatch, hasPlaces]);
 
   return (
     <SortButtonsWrapper>
       <SortButton
         data-sort="createdAt"
         onClick={handleAddSortParam}
-        style={{ backgroundColor: buttonActive.createdAt ? '#2d3250' : '' }}
+        style={{ backgroundColor: activeButton.createdAt ? '#2d3250' : '' }}
       >
         Date
       </SortButton>
       <SortButton
         data-sort="likes"
         onClick={handleAddSortParam}
-        style={{ backgroundColor: buttonActive.likes ? '#2d3250' : '' }}
+        style={{ backgroundColor: activeButton.likes ? '#2d3250' : '' }}
       >
         Rating
       </SortButton>

@@ -33,6 +33,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: placeRouts.USER_PLACES,
+        element: (
+          <UrlParamsContextProvider>
+            <Places />
+          </UrlParamsContextProvider>
+        ),
+      },
+      {
         path: placeRouts.DETAIL_PLACE,
         element: <PlaceDetail />,
         children: [

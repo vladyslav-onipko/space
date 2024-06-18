@@ -1,13 +1,21 @@
 import { styled } from 'styled-components';
 
-import errorIMG from '../../assets/img/404.avif';
+import errorIMG from '../../assets/img/oops.jpg';
 
 import Section from '../../components/UI/Base/Section';
 import Header from '../../layout/Header';
+import Footer from '../../layout/Footer';
+
+const ErrorSection = styled(Section)`
+  margin: 80px 0;
+
+  @media (max-width: 1279px) {
+    margin: 70px 0;
+  }
+`;
 
 const ErrorContainer = styled.div`
   text-align: center;
-  padding: 100px 20px 40px;
 `;
 
 const ErrorPicture = styled.picture`
@@ -25,7 +33,9 @@ const ErrorImg = styled.img`
 `;
 
 const ErrorTitle = styled.h2`
+  color: var(--color-1--3);
   font-size: 4rem;
+  font-weight: 700;
   margin-bottom: 25px;
   text-transform: uppercase;
 
@@ -36,6 +46,7 @@ const ErrorTitle = styled.h2`
 
 const ErrorText = styled.p`
   font-size: 2.4rem;
+  font-weight: 700;
   margin-bottom: 25px;
 
   @media (max-width: 767px) {
@@ -47,18 +58,18 @@ const Error: React.FC = () => {
   return (
     <>
       <Header />
-      <Section>
+      <ErrorSection>
         <ErrorContainer>
           <ErrorPicture>
             <ErrorImg src={errorIMG} alt="not found" />
           </ErrorPicture>
-          <ErrorTitle>404 - page not found</ErrorTitle>
+          <ErrorTitle>Something went wrong</ErrorTitle>
           <ErrorText>
-            The server could not locate the page you are looking for. This may be due to a broken link, outdated URL, or
-            the page may have been removed or relocated.
+            The server encountered an error processing the request. Please try again. Sorry for the trouble :(
           </ErrorText>
         </ErrorContainer>
-      </Section>
+      </ErrorSection>
+      <Footer />
     </>
   );
 };

@@ -28,22 +28,7 @@ export interface UserTopPlace {
 
 // Place item props
 export interface PlaceItemProps extends ComponentPropsWithoutRef<'article'> {
-  place: Place;
-}
-
-// Place slider props
-export interface PlacesSliderProps extends ComponentPropsWithoutRef<'div'> {
-  places: Place[];
-  slidesPerView?: {
-    desktop: number;
-    tablet: number;
-    mobile: number;
-  };
-}
-
-// Place list props
-export interface PlacesListProps extends ComponentPropsWithoutRef<'ul'> {
-  places: Place[];
+  item: Place;
 }
 
 // Get place reques/response data
@@ -100,9 +85,7 @@ export interface ResponseCreatePlaceData {
 // Like place reques/response data
 export interface RequestLikePlaceData {
   placeId: string;
-  userLike: boolean;
   userId: string;
-  onSetIsFavorite: (favorite: boolean | null) => void;
 }
 
 // Delete place reques/response data
@@ -114,9 +97,11 @@ export interface RequestDeletePlaceData {
 // Get users places reques/response data
 export interface RequestGetPlacesData {
   signal: AbortSignal;
-  userId?: string;
+  sessionUserId?: string;
+  creatorId?: string;
   pageParam?: number | unknown;
   searchParam?: string;
+  filterParam?: string;
   topPlacesCount?: number;
 }
 
@@ -124,7 +109,7 @@ export interface ResponseGetAllPlacesData {
   places: Place[];
   nextPage: number | null;
   hasNextPage: boolean;
-  totalPlaces: number;
+  placesAmount: number;
 }
 
 export interface ResponseGetTopPlacesData {

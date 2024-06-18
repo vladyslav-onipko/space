@@ -26,7 +26,7 @@ const PlacePicture = styled.picture`
   flex-shrink: 0;
 `;
 
-const RokectImage = styled.img`
+const PlaceImage = styled.img`
   display: block;
   height: 296px;
 `;
@@ -79,7 +79,7 @@ const ModalContentText = styled.p`
   text-align: center;
 
   a span:first-child {
-    color: var(--color-3--1);
+    color: var(--color-1--3);
     font-size: inherit;
   }
 
@@ -88,9 +88,9 @@ const ModalContentText = styled.p`
   }
 `;
 
-const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
+const PlaceItem: React.FC<PlaceItemProps> = ({ item: place, ...props }) => {
   const [showModal, setShowModal] = useState(false);
-  const [isFavorite, setIsFavorite] = useState<boolean | null>(null);
+  const [isFavorite, setIsFavorite] = useState<boolean | null>(place.favorite);
   const { isAuth, user } = useAppSelector((state) => state.auth);
   const queryClient = useQueryClient();
 
@@ -98,29 +98,33 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
   const detailPlaceRout = placeRouts.DETAIL_PLACE.replace(':id', placeId);
   const favoritePlaceQueryKey = useMemo(() => ['places', placeId, 'favorite'], [placeId]);
 
-  const { mutate: likePlace } = useLikePlace(favoritePlaceQueryKey);
+  const { mutate: likePlace } = useLikePlace(favoritePlaceQueryKey, !isFavorite, setIsFavorite);
 
   const handleLikePlace = ({ target }: React.MouseEvent<HTMLButtonElement>) => {
     if (!isAuth) {
       setShowModal(true);
     } else {
-      likePlace({ placeId, userId: user.id, userLike: !isFavorite, onSetIsFavorite: setIsFavorite });
+      likePlace({ placeId, userId: user.id });
     }
 
     (target as HTMLButtonElement).blur();
   };
 
   useEffect(() => {
-    const setQueryData = async () => {
+    const setPlaceData = async () => {
       await queryClient.cancelQueries({ queryKey: favoritePlaceQueryKey });
       const oldPlace: Place = queryClient.getQueryData(favoritePlaceQueryKey) || place;
-
       queryClient.setQueryData(favoritePlaceQueryKey, oldPlace);
-      setIsFavorite(oldPlace.favorite);
+
+      if (!isAuth) {
+        setIsFavorite(false);
+      } else {
+        setIsFavorite(oldPlace.favorite);
+      }
     };
 
-    setQueryData();
-  }, [place, queryClient, favoritePlaceQueryKey]);
+    setPlaceData();
+  }, [place, queryClient, favoritePlaceQueryKey, isAuth]);
 
   return (
     <>
@@ -130,14 +134,14 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ place }) => {
           <Link type="router-link" mode="regular" text="logged in" to={userRouts.SIGNIN} />
         </ModalContentText>
       </Modal>
-      <PlaceContainer>
+      <PlaceContainer {...props}>
         <PlacePicture>
-          <RokectImage
+          <PlaceImage
             src={place.customImage ? place.customImage : `${process.env.REACT_APP_BACKEND_URL}/${place.image}`}
             alt={place.title}
             height="300"
             width="400"
-          ></RokectImage>
+          ></PlaceImage>
         </PlacePicture>
         <PlaceContentWrapper>
           <PlaceContent>

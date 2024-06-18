@@ -38,12 +38,12 @@ import {
   faPenToSquare,
   faClock,
 } from '@fortawesome/free-regular-svg-icons';
-
 import { faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
-import { store } from './store';
-
 import App from './App';
+import ErrorBoundary from './components/Error/ErrorBoundary';
+
+import { store } from './store';
 
 library.add(
   faArrowDown,
@@ -91,7 +91,9 @@ root.render(
     <ApolloProvider client={apolloClient}>
       <QueryClientProvider client={queryClient}>
         <Provider store={store}>
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </Provider>
       </QueryClientProvider>
     </ApolloProvider>
