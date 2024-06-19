@@ -120,7 +120,7 @@ const Footer: React.FC = () => {
             </ContactInfo>
             <Link
               type="anchor"
-              href="public/Vladyslav-Onipko-Front-End.pdf"
+              href="Vladyslav-Onipko-Full-Stack.pdf"
               text="download CV"
               mode="primary"
               icon={['fas', 'download']}

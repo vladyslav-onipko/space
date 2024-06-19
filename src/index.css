@@ -45,54 +45,6 @@ ul {
   padding: 0;
 }
 
-/* @font-face {
-  font-display: swap;
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 300;
-  src: local('LatoLight'), url('./assets/fonts/Lato/LatoLight.woff2') format('woff2');
-}
-
-@font-face {
-  font-display: swap;
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 400;
-  src: local('LatoRegular'), url('./assets/fonts/Lato/LatoRegular.woff2') format('woff2');
-}
-
-@font-face {
-  font-display: swap;
-  font-family: 'Lato';
-  font-style: normal;
-  font-weight: 700;
-  src: local('LatoBold'), url('./assets/fonts/Lato/LatoBold.woff2') format('woff2');
-}
-
-@font-face {
-  font-display: swap;
-  font-family: 'Syne';
-  font-style: normal;
-  font-weight: 600;
-  src: local('SyneSemiBold'), url('./assets/fonts/Syne/SyneSemiBold.woff2') format('woff2');
-}
-
-@font-face {
-  font-display: swap;
-  font-family: 'Syne';
-  font-style: normal;
-  font-weight: 700;
-  src: local('SyneBold'), url('./assets/fonts/Syne/SyneBold.woff2') format('woff2');
-}
-
-@font-face {
-  font-display: swap;
-  font-family: 'Syne';
-  font-style: normal;
-  font-weight: 800;
-  src: local('SyneExtraBold'), url('./assets/fonts/Syne/SyneExtraBold.woff2') format('woff2');
-} */
-
 :root {
   /* Site colors */
   --color-1--1: #676f9d;

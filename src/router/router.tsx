@@ -14,7 +14,6 @@ import PlaceDetail from '../pages/Place/PlaceDetail';
 import Places from '../pages/Place/Places';
 
 import { UrlParamsContextProvider } from '../store/http/url-params-context';
-
 import { baseRouts, userRouts, placeRouts } from './routs';
 
 const router = createBrowserRouter([
