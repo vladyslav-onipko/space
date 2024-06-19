@@ -70,7 +70,7 @@ const Home: React.FC = () => {
       </Section>
       <Section>
         <Container>
-          <Title tag="h2">Top people places</Title>
+          <Title tag="h2">Top places</Title>
           {isPlacesPending && (
             <ContentWrapper>
               <Spinner />

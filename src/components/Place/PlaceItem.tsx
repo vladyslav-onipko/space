@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 
 import { styled } from 'styled-components';
 import { useQueryClient } from '@tanstack/react-query';
@@ -94,6 +94,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ item: place, ...props }) => {
   const { isAuth, user } = useAppSelector((state) => state.auth);
   const queryClient = useQueryClient();
 
+  const initialized = useRef(true);
   const { id: placeId } = place;
   const detailPlaceRout = placeRouts.DETAIL_PLACE.replace(':id', placeId);
   const favoritePlaceQueryKey = useMemo(() => ['places', placeId, 'favorite'], [placeId]);
@@ -110,21 +111,24 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ item: place, ...props }) => {
     (target as HTMLButtonElement).blur();
   };
 
-  useEffect(() => {
-    const setPlaceData = async () => {
-      await queryClient.cancelQueries({ queryKey: favoritePlaceQueryKey });
-      const oldPlace: Place = queryClient.getQueryData(favoritePlaceQueryKey) || place;
-      queryClient.setQueryData(favoritePlaceQueryKey, oldPlace);
+  const setPlaceData = async () => {
+    await queryClient.cancelQueries({ queryKey: favoritePlaceQueryKey });
+    const oldPlace: Place = queryClient.getQueryData(favoritePlaceQueryKey) || place;
+    queryClient.setQueryData(favoritePlaceQueryKey, oldPlace);
+    setIsFavorite(oldPlace.favorite);
+  };
 
-      if (!isAuth) {
-        setIsFavorite(false);
-      } else {
-        setIsFavorite(oldPlace.favorite);
-      }
-    };
-
+  if (initialized.current) {
     setPlaceData();
-  }, [place, queryClient, favoritePlaceQueryKey, isAuth]);
+  }
+
+  useEffect(() => {
+    if (!isAuth) {
+      setIsFavorite(false);
+    }
+
+    initialized.current = false;
+  }, [isAuth]);
 
   return (
     <>

@@ -20,7 +20,7 @@ import { Place } from '../../models/place';
 import { useGetAllPlaces } from '../../hooks/http/place/get-all-places-query';
 
 const LoadMoreTarget = styled.div`
-  bottom: -18%;
+  bottom: -100px;
   height: 50px;
   left: 50%;
   position: absolute;
@@ -29,11 +29,11 @@ const LoadMoreTarget = styled.div`
   width: 100px;
 
   @media (max-width: 1279px) {
-    bottom: -8%;
+    bottom: -80px;
   }
 
   @media (max-width: 767px) {
-    bottom: -4%;
+    bottom: -60px;
   }
 `;
 
@@ -94,7 +94,7 @@ const Places: React.FC = () => {
         <ToolsBar />
         <PlacesStatusBar loaded={appPlaces.length} from={data?.pages[0]?.placesAmount || 0} />
         {content}
-        <LoadMoreTarget ref={loadMoreRef}></LoadMoreTarget>
+        <LoadMoreTarget aria-hidden="true" ref={loadMoreRef}></LoadMoreTarget>
       </Container>
     </Section>
   );
