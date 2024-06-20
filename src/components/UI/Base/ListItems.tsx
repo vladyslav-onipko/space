@@ -25,12 +25,12 @@ const ListItem = styled.li`
   }
 `;
 
-interface ItemsListProps extends ComponentPropsWithoutRef<'ul'> {
+interface ListItemsProps extends ComponentPropsWithoutRef<'ul'> {
   items: { [key: string]: any }[];
   listItem: ElementType;
 }
 
-const ItemsList: React.FC<ItemsListProps> = ({ items, listItem, ...props }) => {
+const ListItems: React.FC<ListItemsProps> = ({ items, listItem, ...props }) => {
   const Component = listItem;
 
   if (!items.length) {
@@ -50,4 +50,4 @@ const ItemsList: React.FC<ItemsListProps> = ({ items, listItem, ...props }) => {
   );
 };
 
-export default ItemsList;
+export default ListItems;

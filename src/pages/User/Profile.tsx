@@ -13,7 +13,7 @@ import Section from '../../components/UI/Base/Section';
 import ErrorBlock from '../../components/UI/Helpers/ErrorBlock';
 import PlacesStatusBar from '../../components/Place/PlacesStatusBar';
 import PlaceItem from '../../components/Place/PlaceItem';
-import ItemsList from '../../components/UI/Base/ItemsList';
+import ListItems from '../../components/UI/Base/ListItems';
 import Title from '../../components/UI/Base/Title';
 
 import useAppSelector from '../../hooks/app/app-selector';
@@ -139,7 +139,7 @@ const Profile: React.FC = () => {
   }
 
   if (isSuccess && !isPending) {
-    placesContent = <ItemsList items={appPlaces} listItem={PlaceItem} />;
+    placesContent = <ListItems items={appPlaces} listItem={PlaceItem} />;
   }
 
   return (

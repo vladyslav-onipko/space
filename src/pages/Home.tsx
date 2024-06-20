@@ -23,11 +23,11 @@ const Home: React.FC = () => {
   const { data: rocketsData, loading: isRocketsLoading, error: rocketsError } = useApolloQuery(GET_ROCKETS);
 
   const {
-    data: topPlacesData,
+    data: placesData,
     isSuccess: isPlacesSuccess,
     isPending: isPlacesPending,
     isError: isPlacesError,
-    error: topPlacesError,
+    error: placesError,
   } = useGetTopPlaces(9);
 
   const {
@@ -76,8 +76,8 @@ const Home: React.FC = () => {
               <Spinner />
             </ContentWrapper>
           )}
-          {isPlacesError && <ErrorBlock message={topPlacesError.message}></ErrorBlock>}
-          {isPlacesSuccess && !isPlacesPending && <Slider items={topPlacesData.places} slideItem={PlaceItem} />}
+          {isPlacesError && <ErrorBlock message={placesError.message}></ErrorBlock>}
+          {isPlacesSuccess && !isPlacesPending && <Slider items={placesData.places} slideItem={PlaceItem} />}
         </Container>
       </Section>
       <Section>

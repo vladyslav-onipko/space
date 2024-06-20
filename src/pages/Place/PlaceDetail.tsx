@@ -138,6 +138,7 @@ const PlaceHeaderTag = styled.span<{ $isShared: boolean }>`
   background-color: ${({ $isShared }) => ($isShared ? 'var(--color-green-dark)' : 'var(--color-red-dark)')};
   border-radius: 10px;
   color: var(--color-white);
+  flex-shrink: 0;
   margin: 0 25px;
   padding: 5px 15px;
 

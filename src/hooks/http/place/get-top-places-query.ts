@@ -9,7 +9,7 @@ export const useGetTopPlaces = (maxPlaces?: number) => {
   const user = useAppSelector((state) => state.auth.user);
 
   const queryData = useQuery<ResponseGetTopPlacesData, ResponseError>({
-    queryKey: ['places'],
+    queryKey: ['places', maxPlaces],
     queryFn: ({ signal }) => getPlaces({ signal, sessionUserId: user.id, topPlacesCount: maxPlaces }),
   });
 

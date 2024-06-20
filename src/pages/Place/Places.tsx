@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { styled } from 'styled-components';
 
 import PlaceItem from '../../components/Place/PlaceItem';
-import ItemsList from '../../components/UI/Base/ItemsList';
+import ListItems from '../../components/UI/Base/ListItems';
 import ErrorBlock from '../../components/UI/Helpers/ErrorBlock';
 import Loader from '../../components/UI/Helpers/Loader';
 import Container from '../../components/UI/Base/Container';
@@ -84,7 +84,8 @@ const Places: React.FC = () => {
   }
 
   if (isSuccess && !isLoading) {
-    content = <ItemsList items={appPlaces} listItem={PlaceItem} />;
+    console.log(appPlaces);
+    content = <ListItems items={appPlaces} listItem={PlaceItem} />;
   }
 
   return (
