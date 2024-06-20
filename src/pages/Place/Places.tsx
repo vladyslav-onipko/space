@@ -84,7 +84,6 @@ const Places: React.FC = () => {
   }
 
   if (isSuccess && !isLoading) {
-    console.log(appPlaces);
     content = <ListItems items={appPlaces} listItem={PlaceItem} />;
   }
 
