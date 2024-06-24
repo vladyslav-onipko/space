@@ -1,11 +1,12 @@
 # Pet project to show React skills and its ecosystem
-
 ## You can see this project online - [space](https://vladyslav-onipko.github.io/space/)
-
+## Use test profile or create your own one
+```
+Email: test@test.com
+Password: 1234Qq
+```
 ## Server for Space frontend project - [space-server](https://github.com/vladyslav-onipko/space-server)
-
 ## Core technologies used
-
 <p align="left">
   <a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/typescript-colored.svg" width="70" height="70" alt="TypeScript" /></a>
   <a href="https://code.visualstudio.com/" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/skills/visualstudiocode.svg" width="70" height="70" alt="VS Code" /></a>
