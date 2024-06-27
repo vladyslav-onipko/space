@@ -47,7 +47,11 @@ const Root: React.FC = () => {
   const randomNumber = Math.floor(Math.random() * (quotes.length - 1 - 1 + 1)) + 1;
 
   const pageContentTop =
-    location.pathname === baseRouts.HOME ? <HeroSlider /> : <HeroImage title={quotes[randomNumber].text} />;
+    location.pathname === baseRouts.HOME || location.pathname === `${baseRouts.HOME}/` ? (
+      <HeroSlider />
+    ) : (
+      <HeroImage title={quotes[randomNumber].text} />
+    );
 
   return (
     <SiteWrapper>
