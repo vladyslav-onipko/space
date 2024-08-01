@@ -91,7 +91,7 @@ const Registration: React.FC = () => {
                   id="image"
                   name="image"
                   label="Avatar"
-                  imagePath="src/uploads/images/static/astronaut.jpg"
+                  imagePath={`${process.env.REACT_APP_BACKEND_URL}/src/uploads/images/static/astronaut.jpg`}
                   onSetFieldValue={setFieldValue}
                   onSetFieldTouched={setFieldTouched}
                 />

@@ -23,7 +23,7 @@ export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promis
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message);
+      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
     }
 
     if (e.request) {
@@ -56,7 +56,7 @@ export const getPlaces = async ({
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message);
+      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
     }
 
     if (e.request) {
@@ -90,7 +90,10 @@ export const createPlace = async ({
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message, e.response.data.errors);
+      throw new HttpError(
+        e.response.data.message || 'Sorry, something went wrong, please try again later',
+        e.response.data.errors
+      );
     }
 
     if (e.request) {
@@ -125,7 +128,10 @@ export const editPlace = async ({
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message, e.response.data.errors);
+      throw new HttpError(
+        e.response.data.message || 'Sorry, something went wrong, please try again later',
+        e.response.data.errors
+      );
     }
 
     if (e.request) {
@@ -147,7 +153,7 @@ export const likePlace = async ({ placeId, userId }: RequestLikePlaceData) => {
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message);
+      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
     }
 
     if (e.request) {
@@ -167,7 +173,10 @@ export const deletePlace = async ({ placeId, token }: RequestDeletePlaceData) =>
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message, e.response.data.errors);
+      throw new HttpError(
+        e.response.data.message || 'Sorry, something went wrong, please try again later',
+        e.response.data.errors
+      );
     }
 
     if (e.request) {

@@ -44,7 +44,7 @@ const Home: React.FC = () => {
         return {
           ...rocket,
           id: rocket.id,
-          customImage: `${process.env.REACT_APP_IMAGE_SERVICE_URL}/400/300?random=${index}`,
+          image: `${process.env.REACT_APP_IMAGE_SERVICE_URL}/400/300?random=${index}`,
           title: rocket.name,
           hideActions: true,
           favorite: false,

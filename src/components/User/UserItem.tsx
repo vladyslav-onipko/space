@@ -91,12 +91,7 @@ const UserItem: React.FC<UserItemProps> = ({ item: user, ...props }) => {
   return (
     <UserContainer {...props}>
       <UserPicture>
-        <UserImage
-          src={`${process.env.REACT_APP_BACKEND_URL}/${user.image}`}
-          alt={user.name}
-          height="300"
-          width="400"
-        />
+        <UserImage src={user.image} alt={user.name} height="300" width="400" />
       </UserPicture>
       <UserContentWrapper>
         <UserContent>

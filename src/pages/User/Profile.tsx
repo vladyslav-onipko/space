@@ -148,12 +148,7 @@ const Profile: React.FC = () => {
         <Aside>
           <AsideContent>
             <UserPicture>
-              <img
-                src={`${process.env.REACT_APP_BACKEND_URL}/${user.image}`}
-                alt={user.name}
-                height="244"
-                width="244"
-              />
+              <img src={user.image} alt={user.name} height="244" width="244" />
             </UserPicture>
             <UserName>{user.name}</UserName>
             <AsideContentActions>

@@ -120,12 +120,7 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ item: place, ...props }) => {
       </Modal>
       <PlaceContainer {...props}>
         <PlacePicture>
-          <PlaceImage
-            src={place.customImage ? place.customImage : `${process.env.REACT_APP_BACKEND_URL}/${place.image}`}
-            alt={place.title}
-            height="300"
-            width="400"
-          ></PlaceImage>
+          <PlaceImage src={place.image} alt={place.title} height="300" width="400"></PlaceImage>
         </PlacePicture>
         <PlaceContentWrapper>
           <PlaceContent>

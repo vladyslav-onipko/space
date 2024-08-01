@@ -28,7 +28,7 @@ export const getUserProfile = async ({
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message);
+      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
     }
 
     if (e.request) {
@@ -47,7 +47,7 @@ export const getUsers = async ({ max, signal }: RequestGetUsersData): Promise<Re
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message);
+      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
     }
 
     if (e.request) {

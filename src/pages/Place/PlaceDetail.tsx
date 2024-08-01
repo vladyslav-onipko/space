@@ -251,12 +251,7 @@ const UserTopPlacesList: React.FC<{ items: UserTopPlace[] }> = ({ items }) => {
         <TopPlaceItem key={item.id}>
           <TopPlaceLink title={item.title} to={placeRouts.DETAIL_PLACE.replace(':id', item.id)}>
             <TopPlacePicture>
-              <img
-                src={`${process.env.REACT_APP_BACKEND_URL}/${item.image}`}
-                alt={item.title}
-                height="150"
-                width="220"
-              />
+              <img src={item.image} alt={item.title} height="150" width="220" />
             </TopPlacePicture>
           </TopPlaceLink>
         </TopPlaceItem>
@@ -315,12 +310,7 @@ const PlaceDetail: React.FC = () => {
     content = (
       <PlaceWrapper>
         <PlacePicture>
-          <img
-            src={`${process.env.REACT_APP_BACKEND_URL}/${data.place.image}`}
-            alt={data.place.title}
-            height="700"
-            width="780"
-          />
+          <img src={data.place.image} alt={data.place.title} height="700" width="780" />
         </PlacePicture>
         <PlaceContent>
           <PlaceHeader>
@@ -374,12 +364,7 @@ const PlaceDetail: React.FC = () => {
             <PlaceContentTitle>Author</PlaceContentTitle>
             <PlaceAuthorContent>
               <PlaceAuthorPicture>
-                <img
-                  src={`${process.env.REACT_APP_BACKEND_URL}/${data.place.creator.image}`}
-                  alt="Place author"
-                  height="150"
-                  width="140"
-                />
+                <img src={data.place.creator.image} alt="Place author" height="150" width="140" />
               </PlaceAuthorPicture>
               <PlaceContentTags>
                 <PlaceContentTag

@@ -45,7 +45,10 @@ export const auth = (mode: 'signin' | 'signup', userData: SignupInputValues | Si
       return { message: response.data.message };
     } catch (e: any) {
       if (e.response) {
-        throw new HttpError(e.response.data.message, e.response.data.errors);
+        throw new HttpError(
+          e.response.data.message || 'Sorry, something went wrong, please try again later',
+          e.response.data.errors
+        );
       }
 
       if (e.request) {

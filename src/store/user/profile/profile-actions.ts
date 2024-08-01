@@ -18,6 +18,7 @@ export const updateProfile = (userData: ProfileEditInputValues, userId: string, 
       const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}`, requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
       });
 
@@ -39,7 +40,10 @@ export const updateProfile = (userData: ProfileEditInputValues, userId: string, 
       return response.data;
     } catch (e: any) {
       if (e.response) {
-        throw new HttpError(e.response.data.message, e.response.data.errors);
+        throw new HttpError(
+          e.response.data.message || 'Sorry, something went wrong, please try again later',
+          e.response.data.errors
+        );
       }
 
       if (e.request) {

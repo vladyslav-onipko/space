@@ -74,7 +74,7 @@ const ImagePicker: React.FC<ImagePickerProps> = ({
     const createPreview = async () => {
       if (!file) {
         const imageUrl = imagePath
-          ? `${process.env.REACT_APP_BACKEND_URL}/${imagePath}`
+          ? imagePath
           : `${process.env.REACT_APP_IMAGE_SERVICE_URL}/800/700?random=${generateNumber()}`;
 
         try {
