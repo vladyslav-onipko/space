@@ -1,4 +1,10 @@
 # Pet project to show React skills and its ecosystem
+## You can see this project online - [space](https://vladyslav-onipko.github.io/space/)
+## Use test profile or create your own one
+```
+Email: test@test.com
+Password: 1234Qq
+```
 ## Server for Space frontend project - [space-server](https://github.com/vladyslav-onipko/space-server)
 ## Core technologies used
 <p align="left">
