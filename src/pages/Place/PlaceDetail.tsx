@@ -20,6 +20,7 @@ import { useSharePlace } from '../../hooks/http/place/share-place-query';
 import { useDeletePlace } from '../../hooks/http/place/delete-place-query';
 import { useGetPlace } from '../../hooks/http/place/get-place-query';
 import { UserTopPlace } from '../../models/place';
+import imagePlaceholder from '../../assets/img/placeholder-image.jpg';
 
 const PlaceWrapper = styled.div`
   display: flex;
@@ -310,7 +311,12 @@ const PlaceDetail: React.FC = () => {
     content = (
       <PlaceWrapper>
         <PlacePicture>
-          <img src={data.place.image} alt={data.place.title} height="700" width="780" />
+          <img
+            src={typeof data.place.image === 'string' ? data.place.image : imagePlaceholder}
+            alt={data.place.title}
+            height="700"
+            width="780"
+          />
         </PlacePicture>
         <PlaceContent>
           <PlaceHeader>

@@ -67,7 +67,7 @@ export interface ResponseEditPlaceData {
 // Create place reques/response data
 export interface PlaceCreateInputValues extends PlaceEditInputValues {
   address: string;
-  shared: boolean;
+  shared: boolean | string;
 }
 
 export interface RequestCreatePlaceData {

@@ -6,19 +6,18 @@ import HttpError from '../../../models/http-error';
 import { getUserCookies, setUserCookies } from '../../../utils/helpers/user-cookies';
 import { UserData } from '../../../models/user';
 import { setUserData } from '../auth/auth-slice';
+import uploadImage from '../../../lib/cloudinary';
+
+const DEFAULT_ERROR_MESSAGE = 'Sorry, something went wrong, please try again later';
 
 export const updateProfile = (userData: ProfileEditInputValues, userId: string, token: string | null) => {
   return async (dispatch: AppDispatch) => {
-    const requestData = new FormData();
-
-    requestData.append('name', userData.name);
-    requestData.append('image', userData.image);
+    userData.image = await uploadImage(userData.image as File);
 
     try {
-      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}`, requestData, {
+      const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/users/${userId}`, userData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data',
         },
       });
 
@@ -40,14 +39,11 @@ export const updateProfile = (userData: ProfileEditInputValues, userId: string, 
       return response.data;
     } catch (e: any) {
       if (e.response) {
-        throw new HttpError(
-          e.response.data.message || 'Sorry, something went wrong, please try again later',
-          e.response.data.errors
-        );
+        throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE, e.response.data.errors);
       }
 
       if (e.request) {
-        throw new HttpError('Sorry, something went wrong, please try again later');
+        throw new HttpError(DEFAULT_ERROR_MESSAGE);
       }
     }
   };

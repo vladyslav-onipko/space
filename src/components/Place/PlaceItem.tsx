@@ -12,6 +12,7 @@ import { PlaceItemProps } from '../../models/place';
 import { placeRouts } from '../../router/routs';
 import { useLikePlace } from '../../hooks/http/place/like-place-query';
 import { userRouts } from '../../router/routs';
+import imagePlaceholder from '../../assets/img/placeholder-image.jpg';
 
 const PlaceContainer = styled.article`
   border: 1px solid var(--color-1--2);
@@ -120,7 +121,12 @@ const PlaceItem: React.FC<PlaceItemProps> = ({ item: place, ...props }) => {
       </Modal>
       <PlaceContainer {...props}>
         <PlacePicture>
-          <PlaceImage src={place.image} alt={place.title} height="300" width="400"></PlaceImage>
+          <PlaceImage
+            src={typeof place.image === 'string' ? place.image : imagePlaceholder}
+            alt={place.title}
+            height="300"
+            width="400"
+          ></PlaceImage>
         </PlacePicture>
         <PlaceContentWrapper>
           <PlaceContent>

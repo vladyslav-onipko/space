@@ -6,7 +6,9 @@ import { AppDispatch } from '../..';
 import { setUserCookies, getUserCookies, removeUserCookies } from '../../../utils/helpers/user-cookies';
 import HttpError from '../../../models/http-error';
 import { showNotification } from '../../notification/notification-slice';
+import uploadImage from '../../../lib/cloudinary';
 
+const DEFAULT_ERROR_MESSAGE = 'Sorry, something went wrong, please try again later';
 let tokenTimer: ReturnType<typeof setTimeout>;
 
 export const auth = (mode: 'signin' | 'signup', userData: SignupInputValues | SigninInputValues) => {
@@ -15,21 +17,13 @@ export const auth = (mode: 'signin' | 'signup', userData: SignupInputValues | Si
       mode === 'signin'
         ? `${process.env.REACT_APP_BACKEND_URL}/api/users/signin`
         : `${process.env.REACT_APP_BACKEND_URL}/api/users/signup`;
-    let requestData: SigninInputValues | FormData;
 
-    if (mode === 'signup' && 'name' in userData) {
-      requestData = new FormData();
-
-      requestData.append('name', userData.name);
-      requestData.append('email', userData.email);
-      requestData.append('password', userData.password);
-      requestData.append('image', userData.image);
-    } else {
-      requestData = userData;
+    if (mode === 'signup' && 'image' in userData) {
+      userData.image = await uploadImage(userData.image as File);
     }
 
     try {
-      const response = (await axios.post(url, requestData)) as ResponseUserAuthData;
+      const response = (await axios.post(url, userData)) as ResponseUserAuthData;
       const tokenExpirationDate = new Date().getTime() + response.data.tokenExpiration; // calculate expires token time in future
 
       dispatch(setUserData({ isAuth: true, token: response.data.token, user: response.data.user }));
@@ -45,14 +39,11 @@ export const auth = (mode: 'signin' | 'signup', userData: SignupInputValues | Si
       return { message: response.data.message };
     } catch (e: any) {
       if (e.response) {
-        throw new HttpError(
-          e.response.data.message || 'Sorry, something went wrong, please try again later',
-          e.response.data.errors
-        );
+        throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE, e.response.data.errors);
       }
 
       if (e.request) {
-        throw new HttpError('Sorry, something went wrong, please try again later');
+        throw new HttpError(DEFAULT_ERROR_MESSAGE);
       }
     }
   };

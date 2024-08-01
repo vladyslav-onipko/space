@@ -8,6 +8,8 @@ import {
   RequestGetUsersData,
 } from '../../models/user';
 
+const DEFAULT_ERROR_MESSAGE = 'Sorry, something went wrong, please try again later';
+
 export const getUserProfile = async ({
   userId,
   token,
@@ -28,11 +30,11 @@ export const getUserProfile = async ({
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };
@@ -47,11 +49,11 @@ export const getUsers = async ({ max, signal }: RequestGetUsersData): Promise<Re
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };

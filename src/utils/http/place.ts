@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import HttpError from '../../models/http-error';
+import uploadImage from '../../lib/cloudinary';
 
 import {
   RequestCreatePlaceData,
@@ -14,6 +15,8 @@ import {
   RequestGetPlacesData,
 } from '../../models/place';
 
+const DEFAULT_ERROR_MESSAGE = 'Sorry, something went wrong, please try again later';
+
 export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promise<ResponseGetPlaceData | undefined> => {
   const url = `${process.env.REACT_APP_BACKEND_URL}/api/places/${placeId}`;
 
@@ -23,11 +26,11 @@ export const getPlace = async ({ placeId, signal }: RequestGetPlaceData): Promis
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };
@@ -56,11 +59,11 @@ export const getPlaces = async ({
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };
@@ -70,34 +73,27 @@ export const createPlace = async ({
   userId,
   token,
 }: RequestCreatePlaceData): Promise<ResponseCreatePlaceData | undefined> => {
-  const requestData = new FormData();
+  const requestData = { ...placeData, creator: '' };
 
-  requestData.append('address', placeData.address);
-  requestData.append('title', placeData.title);
-  requestData.append('image', placeData.image);
-  requestData.append('description', placeData.description);
-  requestData.append('creator', userId);
-  requestData.append('shared', placeData.shared.toString());
+  requestData.image = await uploadImage(placeData.image as File);
+  requestData.shared = placeData.shared.toString();
+  requestData.creator = userId;
 
   try {
     const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/places`, requestData, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
       },
     });
 
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(
-        e.response.data.message || 'Sorry, something went wrong, please try again later',
-        e.response.data.errors
-      );
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE, e.response.data.errors);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };
@@ -108,34 +104,26 @@ export const editPlace = async ({
   token,
   shared,
 }: RequestEditPlaceData): Promise<ResponseEditPlaceData | undefined> => {
-  const requestData = new FormData();
-
-  if ('title' in placeData) {
-    requestData.append('title', placeData.title);
-    requestData.append('image', placeData.image);
-    requestData.append('description', placeData.description);
+  if ('image' in placeData) {
+    placeData.image = await uploadImage(placeData.image as File);
   }
 
   try {
-    const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/places/${placeId}`, requestData, {
+    const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/api/places/${placeId}`, placeData, {
       params: { shared },
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
       },
     });
 
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(
-        e.response.data.message || 'Sorry, something went wrong, please try again later',
-        e.response.data.errors
-      );
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE, e.response.data.errors);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };
@@ -153,11 +141,11 @@ export const likePlace = async ({ placeId, userId }: RequestLikePlaceData) => {
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(e.response.data.message || 'Sorry, something went wrong, please try again later');
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };
@@ -173,14 +161,11 @@ export const deletePlace = async ({ placeId, token }: RequestDeletePlaceData) =>
     return response.data;
   } catch (e: any) {
     if (e.response) {
-      throw new HttpError(
-        e.response.data.message || 'Sorry, something went wrong, please try again later',
-        e.response.data.errors
-      );
+      throw new HttpError(e.response.data.message || DEFAULT_ERROR_MESSAGE, e.response.data.errors);
     }
 
     if (e.request) {
-      throw new HttpError('Sorry, something went wrong, please try again later');
+      throw new HttpError(DEFAULT_ERROR_MESSAGE);
     }
   }
 };
