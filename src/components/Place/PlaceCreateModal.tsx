@@ -20,7 +20,7 @@ const PlaceCreateModal: React.FC = () => {
   const { token, user } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
-  const { mutate: createPlace } = useCreatePlace();
+  const { mutate: createPlace, isPending } = useCreatePlace();
 
   const initialInputValues: PlaceCreateInputValues = {
     image: '',
@@ -50,7 +50,7 @@ const PlaceCreateModal: React.FC = () => {
                 <Button
                   disabled={(!isValid || !dirty) && !isSubmitting}
                   type="submit"
-                  text={isSubmitting ? 'Creating...' : 'Create'}
+                  text={isPending ? 'Creating...' : 'Create'}
                   mode="secondary"
                 />
               </>

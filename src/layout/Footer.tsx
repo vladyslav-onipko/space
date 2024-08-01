@@ -120,7 +120,7 @@ const Footer: React.FC = () => {
             </ContactInfo>
             <Link
               type="anchor"
-              href="Vladyslav-Onipko-Full-Stack.pdf"
+              href="https://drive.google.com/file/d/1iW5d1hDTXeNUbEdlvdnY8GjMvl5llZ4o/view?usp=drive_link"
               text="download CV"
               mode="primary"
               icon={['fas', 'download']}
